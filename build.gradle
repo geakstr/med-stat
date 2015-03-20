@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 apply plugin: 'idea'
-
+apply plugin: 'eclipse'
 
 buildscript {
     repositories {
@@ -16,7 +16,7 @@ buildscript {
 }
 
 jar {
-    baseName = 'it15med'
+    baseName = 'med-stat'
     version =  '0.0.1-SNAPSHOT'
 }
 
