@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <title>Медицинский портал</title>
-</head>
-<body>
+@import ru.aspu.medstat.entities.Customer;
 
+@args List<Customer> customers
+@extends(layout.html)
 
-This is work
-
-</body>
-</html>
+@section("content") {
+    @for(Customer customer : customers) {
+        <p>@customer.toString()</p>
+    }
+}

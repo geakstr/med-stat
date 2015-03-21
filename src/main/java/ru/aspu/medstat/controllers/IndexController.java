@@ -1,27 +1,22 @@
 package ru.aspu.medstat.controllers;
 
-import ru.aspu.medstat.repositories.*;
-import ru.aspu.medstat.entities.*;
-
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Controller;
+import ru.aspu.medstat.entities.Customer;
+import ru.aspu.medstat.repositories.CustomerRepository;
 
-@org.springframework.stereotype.Controller
+@Controller
 public class IndexController {
     @Autowired
     private CustomerRepository repository;
 
     @RequestMapping("/")
-    public String index() {
+    public String index(Model model) {
         repository.save(new Customer("Jack", "Bauer"));
 
-        // fetch all customers
-        System.out.println("Customers found with findAll():");
-        System.out.println("-------------------------------");
-        for (Customer customer : repository.findAll()) {
-            System.out.println(customer);
-        }
-        System.out.println();
+        model.addAttribute("customers", repository.findAll());
 
         return "index";
     }
