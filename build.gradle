@@ -29,8 +29,13 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.hibernate:hibernate-validator")
+
     compile("com.h2database:h2")
-    compile("org.rythmengine:rythm-engine:1.0.1")
+
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
