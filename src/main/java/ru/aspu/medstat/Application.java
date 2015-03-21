@@ -1,11 +1,10 @@
-package ru.aspu.services.stats;
+package ru.aspu.medstat;
 
 import org.rythmengine.RythmEngine;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.context.annotation.*;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +14,7 @@ import java.util.Map;
 
 import static org.rythmengine.conf.RythmConfigurationKey.HOME_TEMPLATE;
 
+@SpringBootApplication
 public class Application {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Config.class, args);
