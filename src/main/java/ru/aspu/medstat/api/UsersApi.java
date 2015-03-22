@@ -23,24 +23,12 @@ public class UsersApi {
         return repo.findOne(userId);
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "application/json")
-    public IResponse registerUser(final @RequestParam("email") String email,
-                                  final @RequestParam("first_name") String firstName,
-                                  final @RequestParam("last_name") String lastName,
-                                  final @RequestParam("birth_date") Long birthDate,
-                                  final @RequestParam("password") String password) {
-        if (null != repo.findByEmail(email)) {
-            return new NoticeResponse("User with " + email + " email already exist");
-        }
-        return new UserResponse(repo.save(new User(email, firstName, lastName, birthDate, password)), 201);
-    }
-
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/", method = RequestMethod.POST, produces = "application/json")
     public IResponse loginUser(final @RequestParam("email") String email,
                                final @RequestParam("password") String password) {
         final User user = repo.findByEmailAndPassword(email, password);
         if (null == user) {
-            return new ErrorResponse("Incorrect credentials", 403);
+            return new ErrorResponse("Incorrect credentials");
         }
         return new UserResponse(user);
     }

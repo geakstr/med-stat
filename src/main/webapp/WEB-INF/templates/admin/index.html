@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Панель администратора | Медицинский портал</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<h1>Панель администратора</h1>
+
+<hr/>
+
+<form th:action="@{/admin/users}" th:object="${UserRegistrationForm}" id="admin-user-registration-form" method="post" autocomplete="off">
+    <h2>Регистрация</h2>
+
+    <div class="form-group">
+        <label for="admin-user-registration-form-first-name">Имя</label>
+        <input type="text" th:field="*{firstName}" class="form-control" id="admin-user-registration-form-first-name" autocomplete="off" placeholder="Владимир"/>
+    </div>
+
+    <div class="form-group">
+        <label for="admin-user-registration-form-last-name">Фамилия</label>
+        <input type="text" th:field="*{lastName}" class="form-control" id="admin-user-registration-form-last-name" autocomplete="off" placeholder="Иванов"/>
+    </div>
+
+    <div class="form-group">
+        <label for="admin-user-registration-form-birth-date">Дата рождения</label>
+        <input type="date" th:field="*{birthDate}" class="form-control" id="admin-user-registration-form-birth-date" autocomplete="off"/>
+    </div>
+
+    <div class="form-group">
+        <label for="admin-user-registration-form-email">Эл. почта</label>
+        <input type="email" th:field="*{email}" class="form-control" id="admin-user-registration-form-email" autocomplete="off" placeholder="example@mail.ru"/>
+    </div>
+
+    <div class="form-group">
+        <label for="admin-user-registration-form-telephone">Телефон</label>
+        <input type="text" th:field="*{telephone}" class="form-control" id="admin-user-registration-form-telephone" autocomplete="off" placeholder="79607008090"/>
+    </div>
+
+    <div class="form-group">
+        <label for="admin-user-registration-form-password">Пароль</label>
+        <input type="text" th:field="*{password}" class="form-control" id="admin-user-registration-form-password" autocomplete="off" placeholder="uWnp6x"/>
+        <span id="admin-user-registration-form-password-helper" class="help-block" style="display: none;">
+            <p class="text-danger">Пароль слишком простой — это небезопасно. Хороший пароль содержит не менее 6 символов (как букв, так и цифр).</p>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label>Роль в системе</label>
+
+        <div>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default active">
+                    <input type="radio" th:field="*{role}" id="admin-user-registration-form-role-1" autocomplete="off" th:checked="${true}" value="1"/> Пациент
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio" th:field="*{role}" id="admin-user-registration-form-role-2" autocomplete="off" value="2"/> Врач
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <span id="admin-user-registration-form-message" class="help-block" style="display: none;">
+        <p class="text-danger" style="white-space: pre-wrap;"></p>
+    </span>
+
+    <input type="submit" id="admin-user-registration-form-submit" class="btn btn-success" disabled="disabled" value="Зарегистрировать"/>
+</form>
+
+<div id="out"></div>
+
+<script src="/js/jquery-2.1.3.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<script src="/js/admin.js"></script>
+
+</body>
+</html>
