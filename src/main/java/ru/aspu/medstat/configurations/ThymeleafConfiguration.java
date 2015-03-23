@@ -1,4 +1,4 @@
-package ru.aspu.medstat.configs;
+package ru.aspu.medstat.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,7 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 
 @Configuration
 @PropertySource("classpath:thymeleaf.properties")
-public class ThymeleafConfig {
+public class ThymeleafConfiguration {
     @Bean
     public TemplateResolver templateResolver() {
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();

@@ -1,4 +1,4 @@
-package ru.aspu.medstat.api.responses;
+package ru.aspu.medstat.responses;
 
 import ru.aspu.medstat.entities.User;
 

@@ -3,12 +3,11 @@ package ru.aspu.medstat.api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.aspu.medstat.api.responses.ErrorResponse;
-import ru.aspu.medstat.api.responses.NoticeResponse;
-import ru.aspu.medstat.api.responses.UserResponse;
+import ru.aspu.medstat.responses.ErrorResponse;
+import ru.aspu.medstat.responses.UserResponse;
 import ru.aspu.medstat.entities.User;
 import ru.aspu.medstat.repositories.UserRepository;
-import ru.aspu.medstat.api.responses.IResponse;
+import ru.aspu.medstat.responses.IResponse;
 
 @RestController
 @RequestMapping("/api/users")

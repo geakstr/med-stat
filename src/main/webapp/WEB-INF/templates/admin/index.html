@@ -40,14 +40,6 @@
     </div>
 
     <div class="form-group">
-        <label for="admin-user-registration-form-password">Пароль</label>
-        <input type="text" th:field="*{password}" class="form-control" id="admin-user-registration-form-password" autocomplete="off" placeholder="uWnp6x"/>
-        <span id="admin-user-registration-form-password-helper" class="help-block" style="display: none;">
-            <p class="text-danger">Пароль слишком простой — это небезопасно. Хороший пароль содержит не менее 6 символов (как букв, так и цифр).</p>
-        </span>
-    </div>
-
-    <div class="form-group">
         <label>Роль в системе</label>
 
         <div>
@@ -66,14 +58,17 @@
         <p class="text-danger" style="white-space: pre-wrap;"></p>
     </span>
 
-    <input type="submit" id="admin-user-registration-form-submit" class="btn btn-success" disabled="disabled" value="Зарегистрировать"/>
+    <input type="submit"
+           id="admin-user-registration-form-submit"
+           class="btn btn-success"
+           data-loading-text="Отправляем письмо…"
+           disabled="disabled"
+           value="Зарегистрировать"/>
 </form>
 
-<div id="out"></div>
 
 <script src="/js/jquery-2.1.3.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
-
 <script src="/js/admin.js"></script>
 
 </body>

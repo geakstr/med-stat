@@ -20,7 +20,7 @@ public class User {
     @Column(nullable = false)
     public String birthDate;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     public String password;
 
     @Column(nullable = false)
@@ -35,46 +35,7 @@ public class User {
     @Column
     public boolean emailApproved = false;
 
-    @Column
-    public boolean changedPassword = false;
-
     public User() {}
-
-    public User(String email, String firstName, String lastName, String birthDate, String password, int role) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
-        this.password = password;
-        this.role = role;
-    }
-
-    public User(String email, String firstName, String lastName, String birthDate, String password) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
-        this.password = password;
-    }
-
-    public User(String email, String firstName, String lastName, String birthDate, String password, String telephone) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
-        this.password = password;
-        this.telephone = telephone;
-    }
-
-    public User(String email, String firstName, String lastName, String birthDate, String password, String telephone, int role) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
-        this.password = password;
-        this.telephone = telephone;
-        this.role = role;
-    }
 
     @Override
     public String toString() {

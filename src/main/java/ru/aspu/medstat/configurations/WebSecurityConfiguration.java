@@ -1,9 +1,9 @@
-package ru.aspu.medstat.configs;
+package ru.aspu.medstat.configurations;
 
 //@Configuration
 //@EnableWebMvcSecurity
 //@Order(Ordered.HIGHEST_PRECEDENCE)
-public class WebSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
+public class WebSecurityConfiguration /*extends WebSecurityConfigurerAdapter*/ {
 
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {

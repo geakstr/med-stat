@@ -7,16 +7,15 @@ var $adminUserRegistrationFormFirstName = $('#admin-user-registration-form-first
 var $adminUserRegistrationFormLastName = $('#admin-user-registration-form-last-name');
 var $adminUserRegistrationFormBirthDate = $('#admin-user-registration-form-birth-date');
 var $adminUserRegistrationFormEmail = $('#admin-user-registration-form-email');
-var $adminUserRegistrationFormPassword = $('#admin-user-registration-form-password');
 var $adminUserRegistrationFormTelephone = $('#admin-user-registration-form-telephone');
 var $adminUserRegistrationFormRole1 = $('#admin-user-registration-form-role-1');
 var $adminUserRegistrationFormRole2 = $('#admin-user-registration-form-role-2');
 var $adminUserRegistrationFormSubmit = $('#admin-user-registration-form-submit');
-var $adminUserRegistrationFormPasswordHelper = $('#admin-user-registration-form-password-helper');
 var $adminUserRegistrationFormMessage = $('#admin-user-registration-form-message');
 
 $adminUserRegistrationForm.submit(function (event) {
     event.preventDefault();
+    $adminUserRegistrationFormSubmit.button('loading');
     submitForm($(this), function (response) {
         if (response.type === "error") {
             $adminUserRegistrationFormMessage.show();
@@ -24,10 +23,9 @@ $adminUserRegistrationForm.submit(function (event) {
         } else {
             $adminUserRegistrationFormMessage.hide();
             $adminUserRegistrationForm.trigger('reset');
-            $.get("/admin/generate-password/6", function (password) {
-                $adminUserRegistrationFormPassword.val(password);
-            });
         }
+        $adminUserRegistrationFormSubmit.button('reset');
+        $adminUserRegistrationFormSubmit.attr('disabled', true);
     });
     return false;
 });
@@ -41,10 +39,9 @@ function validateAdminUserRegistrationForm() {
     var lastName = $adminUserRegistrationFormLastName.val().trim();
     var birthDate = $adminUserRegistrationFormBirthDate.val().trim();
     var email = $adminUserRegistrationFormEmail.val().trim();
-    var password = $adminUserRegistrationFormPassword.val().trim();
 
     var disabled = true;
-    if (firstName.length > 0 && lastName.length > 0 && password.length >= 6 && emailValidate(email)) {
+    if (firstName.length > 0 && lastName.length > 0 && emailValidate(email)) {
         disabled = false;
     } else {
         disabled = true
@@ -57,12 +54,6 @@ function validateAdminUserRegistrationForm() {
     }
 
     $adminUserRegistrationFormSubmit.attr('disabled', disabled);
-
-    if (passwordReliabilityTest(password)) {
-        $adminUserRegistrationFormPasswordHelper.hide();
-    } else {
-        $adminUserRegistrationFormPasswordHelper.show();
-    }
 }
 
 function emailValidate(email) {

@@ -1,4 +1,4 @@
-package ru.aspu.medstat.api.responses;
+package ru.aspu.medstat.responses;
 
 public class ErrorResponse extends BaseResponse {
     public String message;

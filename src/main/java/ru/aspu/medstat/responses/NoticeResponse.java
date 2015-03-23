@@ -1,4 +1,4 @@
-package ru.aspu.medstat.api.responses;
+package ru.aspu.medstat.responses;
 
 public class NoticeResponse extends BaseResponse {
     public String message;
