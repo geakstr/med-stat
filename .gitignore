@@ -5,7 +5,6 @@
 #####=== Eclipse ===#####
 *.pydevproject
 .metadata
-.gradle
 bin/
 tmp/
 *.tmp
@@ -118,7 +117,6 @@ crashlytics-build.properties
 
 #####=== NetBeans ===#####
 nbproject/private/
-build/
 nbbuild/
 dist/
 nbdist/

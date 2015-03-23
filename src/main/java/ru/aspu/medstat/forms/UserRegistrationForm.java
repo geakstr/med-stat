@@ -6,7 +6,7 @@ public class UserRegistrationForm {
     private String birthDate = "";
     private String email = "";
     private String password = "";
-    private String telephone = "";
+    private String phone = "";
     private int role = 1;
 
     public String getFirstName() {
@@ -49,12 +49,12 @@ public class UserRegistrationForm {
         this.password = password.trim();
     }
 
-    public String getTelephone() {
-        return telephone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone.trim();
+    public void setPhone(String phone) {
+        this.phone = phone.trim();
     }
 
     public int getRole() {

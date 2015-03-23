@@ -14,9 +14,9 @@ import ru.aspu.medstat.entities.UserRoles;
 import ru.aspu.medstat.forms.UserRegistrationForm;
 import ru.aspu.medstat.repositories.UserRepository;
 import ru.aspu.medstat.services.MailService;
-import ru.aspu.medstat.utils.EmailUtil;
-import ru.aspu.medstat.utils.PasswordUtil;
-import ru.aspu.medstat.utils.TelephoneUtil;
+import ru.aspu.medstat.utils.EmailUtils;
+import ru.aspu.medstat.utils.PasswordUtils;
+import ru.aspu.medstat.utils.FormatUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,7 +55,7 @@ public class AdminController {
         if (null != repo.findByEmail(form.getEmail())) {
             error += "Пользователь с такой эл. почтой уже зарегистрирован\n";
         }
-        if (!EmailUtil.validate(form.getEmail())) {
+        if (!EmailUtils.validate(form.getEmail())) {
             error += "Невалидный адрес эл. почты. Принимается паттерн вида *@*\n";
         }
         if (form.getFirstName().length() == 0) {
@@ -84,9 +84,9 @@ public class AdminController {
         user.firstName = form.getFirstName();
         user.lastName = form.getLastName();
         user.birthDate = form.getBirthDate();
-        user.telephone = TelephoneUtil.normalize(form.getTelephone());
+        user.phone = FormatUtils.normalizePhoneNumber(form.getPhone());
         user.role = form.getRole();
-        user.emailToken = PasswordUtil.generate(32);
+        user.emailToken = PasswordUtils.generate(32);
 
         final User dbUser = repo.save(user);
         if (null != dbUser) {

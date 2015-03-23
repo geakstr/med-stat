@@ -27,7 +27,7 @@ public class User {
     public int role = UserRoles.PATIENT;
 
     @Column(nullable = true)
-    public String telephone;
+    public String phone;
 
     @Column(nullable = true)
     public String emailToken;

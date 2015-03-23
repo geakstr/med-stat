@@ -2,7 +2,7 @@ package ru.aspu.medstat.utils;
 
 import java.security.SecureRandom;
 
-public class PasswordUtil {
+public class PasswordUtils {
     private final static SecureRandom random = new SecureRandom();
 
     public static boolean validate(String password) {
