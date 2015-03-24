@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Панель администратора | Медицинский портал</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/style.css"/>
 </head>
 <body>
@@ -25,24 +25,47 @@
     </div>
 
     <div class="form-group">
-        <label for="admin-user-registration-form-birth-date">Дата рождения</label>
-        <input type="date" th:field="*{birthDate}" class="form-control" id="admin-user-registration-form-birth-date" autocomplete="off"/>
-    </div>
-
-    <div class="form-group">
         <label for="admin-user-registration-form-email">Эл. почта</label>
         <input type="email" th:field="*{email}" class="form-control" id="admin-user-registration-form-email" autocomplete="off" placeholder="example@mail.ru"/>
     </div>
 
     <div class="form-group">
-        <label for="admin-user-registration-form-phone">Телефон</label>
+        <label for="admin-user-registration-form-phone">Телефон <small style="font-weight: 400; color: #999;">(не обязательно)</small></label>
         <input type="text" th:field="*{phone}" class="form-control" id="admin-user-registration-form-phone" autocomplete="off" placeholder="79607008090"/>
     </div>
 
     <div class="form-group">
+        <label>Дата рождения</label>
 
+        <div class="clearfix">
+            <input type="text"
+                   th:field="*{birthDateDay}"
+                   id="admin-user-registration-form-birth-date-day"
+                   autocomplete="off"
+                   class="form-control"
+                   placeholder="дд"
+                   style="width: 15%; float: left; text-align:right;"/><!--
+            --><span style="width: 5%; padding: 6px 0; float: left; text-align: center">/</span><!--
+            --><input type="text"
+                   th:field="*{birthDateMonth}"
+                   id="admin-user-registration-form-birth-date-month"
+                   autocomplete="off"
+                   class="form-control"
+                   placeholder="мм"
+                   style="width: 15%; float: left; text-align:right;"/><!--
+            --><span style="width: 5%; padding: 6px 0; float: left; text-align: center">/</span><!--
+            --><input type="text"
+                   th:field="*{birthDateYear}"
+                   id="admin-user-registration-form-birth-date-year"
+                   autocomplete="off"
+                   class="form-control"
+                   placeholder="гггг"
+                   style="width: 20%; float: left; text-align:right;"/>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label>Роль в системе</label>
-
         <div>
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-default active">
@@ -68,8 +91,8 @@
 </form>
 
 
-<script src="/js/jquery-2.1.3.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+<script src="/vendor/jquery-2.1.3.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 <script src="/js/admin.js"></script>
 
 </body>

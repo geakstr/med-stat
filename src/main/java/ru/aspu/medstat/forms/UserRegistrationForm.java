@@ -3,7 +3,9 @@ package ru.aspu.medstat.forms;
 public class UserRegistrationForm {
     private String firstName = "";
     private String lastName = "";
-    private String birthDate = "";
+    private String birthDateDay = "";
+    private String birthDateMonth = "";
+    private String birthDateYear = "";
     private String email = "";
     private String password = "";
     private String phone = "";
@@ -25,15 +27,31 @@ public class UserRegistrationForm {
         this.lastName = lastName.trim();
     }
 
-    public String getBirthDate() {
-        return birthDate;
-    }
+    public String getBirthDateDay() {
+		return birthDateDay;
+	}
 
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate.trim();
-    }
+	public void setBirthDateDay(String birthDateDay) {
+		this.birthDateDay = birthDateDay;
+	}
 
-    public String getEmail() {
+	public String getBirthDateMonth() {
+		return birthDateMonth;
+	}
+
+	public void setBirthDateMonth(String birthDateMonth) {
+		this.birthDateMonth = birthDateMonth;
+	}
+
+	public String getBirthDateYear() {
+		return birthDateYear;
+	}
+
+	public void setBirthDateYear(String birthDateYear) {
+		this.birthDateYear = birthDateYear;
+	}
+
+	public String getEmail() {
         return email;
     }
 

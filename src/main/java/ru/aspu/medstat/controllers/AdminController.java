@@ -33,13 +33,12 @@ public class AdminController {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     private MailService mail;
 
-    private SimpleDateFormat birthDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat birthDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @RequestMapping("/")
     public String index(Model model) {
         UserRegistrationForm form = new UserRegistrationForm();
-        form.setBirthDate("1973-01-01");
-
+        
         model.addAttribute("UserRegistrationForm", form);
 
         return "admin/index";
@@ -64,12 +63,14 @@ public class AdminController {
         if (form.getLastName().length() == 0) {
             error += "Не допускается пустая фамилия пользователя\n";
         }
-        if (form.getBirthDate().length() == 0) {
+        
+        String birthDate = form.getBirthDateDay().trim() + "/" + form.getBirthDateMonth().trim() + "/" + form.getBirthDateYear().trim();
+        if (birthDate.length() == 0) {
             error += "Не допускается отсутствие даты рождения пользователя\n";
         }
 
         try {
-            birthDateFormat.parse(form.getBirthDate());
+            birthDateFormat.parse(birthDate);
         } catch (ParseException e) {
             error += "Неверный формат даты рождения. Ожидается dd-MM-yyyy\n";
         }
@@ -83,18 +84,15 @@ public class AdminController {
         user.email = form.getEmail();
         user.firstName = form.getFirstName();
         user.lastName = form.getLastName();
-        user.birthDate = form.getBirthDate();
+        user.birthDate = birthDate;
         user.phone = FormatUtils.normalizePhoneNumber(form.getPhone());
         user.role = form.getRole();
         user.emailToken = PasswordUtils.generate(32);
+        
+        mail.send(user.email, "Медицинский портал АГУ. Регистрация", String.format(
+                "<a href=\"http://localhost:8080/mail/confirm/%s\">Нажмите сюда для окончания регистрации</a>",
+                user.emailToken));
 
-        final User dbUser = repo.save(user);
-        if (null != dbUser) {
-            mail.send(user.email, "Медицинский портал АГУ. Регистрация", String.format(
-                    "<a href=\"http://localhost:8080/mail/confirm/%s\">Ссылка для подтверждения</a>",
-                    user.emailToken));
-        }
-
-        return new UserResponse(dbUser);
+        return new UserResponse(repo.save(user));
     }
 }
