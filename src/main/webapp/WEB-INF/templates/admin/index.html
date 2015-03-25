@@ -65,10 +65,19 @@
         <div>
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-default active">
-                    <input type="radio" th:field="*{role}" id="admin-user-registration-form-role-1" autocomplete="off" th:checked="${true}" value="1"/> Пациент
+                    <input type="radio"
+                           th:field="*{role}"
+                           th:checked="${true}"
+                           id="admin-user-registration-form-role-1"
+                           autocomplete="off"
+                           value="1"/> Пациент
                 </label>
                 <label class="btn btn-default">
-                    <input type="radio" th:field="*{role}" id="admin-user-registration-form-role-2" autocomplete="off" value="2"/> Врач
+                    <input type="radio"
+                           th:field="*{role}"
+                           id="admin-user-registration-form-role-2"
+                           autocomplete="off"
+                           value="2"/> Врач
                 </label>
             </div>
         </div>
