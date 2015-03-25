@@ -15,9 +15,3 @@ form {
 #admin-user-registration-form {
     width: 300px;
 }
-
-#admin-user-registration-form-birth-date-picker {
-  position: relative;
-  left: -10px;
-  margin-bottom: -22px;
-}

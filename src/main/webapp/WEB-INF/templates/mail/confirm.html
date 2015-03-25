@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout/header :: head (title='Первоначальная установка пароля')"></head>
+<body>
+
+<style>
+#mail-confirmation-form {
+  width: 300px;
+}
+</style>
+
+<h1>Первоначальная установка пароля</h1>
+
+<hr/>
+
+<form th:action="@{/mail/confirm}"
+      th:object="${MailConfirmationForm}"
+      id="mail-confirmation-form"
+      method="post"
+      autocomplete="off">
+
+  <div class="form-group">
+      <label for="mail-confirmation-form-password">Пароль</label>
+      <input type="text"
+             th:field="*{password}"
+             id="mail-confirmation-form-password"
+             class="form-control"
+             autocomplete="off"
+             placeholder="Ваш пароль"/>
+  </div>
+
+  <span id="mail-confirmation-form-message" class="help-block" style="display: none;">
+      <p class="text-danger" style="white-space: pre-wrap;"></p>
+  </span>
+
+  <input type="hidden"
+         id="mail-confirmation-form-mail-token"
+         th:field="*{emailToken}"/>
+
+  <input type="submit"
+         id="mail-confirmation-form-submit"
+         class="btn btn-success"
+         data-loading-text="Подтверждаем эл. почту…"
+         value="Установить пароль"/> 
+</form>
+
+<span th:include="layout/footer :: scripts" class="hidden"></span>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+$(document).ready(function() {
+  var $form = $('#mail-confirmation-form');
+  var $password = $('#mail-confirmation-form-password');
+  var $mailToken = $('#mail-confirmation-form-mail-token');
+  var $message = $('#mail-confirmation-form-message');
+  var $submit = $('#mail-confirmation-form-submit');
+
+  $password.on('input change', function(event) {
+    var disabled = false;
+    if (isReliablePassword($password.val().trim())) {
+      $message.hide();
+    } else {
+      $message.show();
+      $message.find('p').text(messages['too_simple_password']);
+    }
+
+    if ($password.val().trim().length < 6 || $mailToken.val().trim().length === 0) {
+      disabled = true;
+    }
+
+    $submit.attr('disabled', disabled);
+  });
+
+  $form.submit(function(event) {
+    event.preventDefault();
+
+    $submit.button('loading');
+
+    submitForm($form, function(response) {
+      $submit.button('reset');
+      if (response.type === "error") {
+        $message.show();
+        $message.find('p').text(response.message);
+      } else {
+        window.location.replace('http://localhost:8080');
+      }
+    }, function(request, status, error) {
+      $message.show();
+      $message.find('p').text(messages['something_wrong']);
+
+      $submit.button('reset');
+    });
+
+    return false;
+  });
+});
+/*]]>*/
+</script>
+
+</body>
+</html>

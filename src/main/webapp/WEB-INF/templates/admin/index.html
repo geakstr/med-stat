@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Панель администратора | Медицинский портал</title>
-    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/css/style.css"/>
-</head>
+<head th:include="layout/header :: head (title='Панель администратора')"></head>
 <body>
+
 <h1>Панель администратора</h1>
 
 <hr/>
@@ -90,10 +86,100 @@
            value="Зарегистрировать"/>
 </form>
 
+<span th:include="layout/footer :: scripts" class="hidden"></span>
 
-<script src="/vendor/jquery-2.1.3.min.js"></script>
-<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
-<script src="/js/admin.js"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+$(document).ready(function() {
+  var $adminUserRegistrationForm = $('#admin-user-registration-form');
+  var $adminUserRegistrationFormFirstName = $('#admin-user-registration-form-first-name');
+  var $adminUserRegistrationFormLastName = $('#admin-user-registration-form-last-name');
+  var $adminUserRegistrationFormBirthDateDay = $('#admin-user-registration-form-birth-date-day');
+  var $adminUserRegistrationFormBirthDateMonth = $('#admin-user-registration-form-birth-date-month');
+  var $adminUserRegistrationFormBirthDateYear = $('#admin-user-registration-form-birth-date-year');
+  var $adminUserRegistrationFormEmail = $('#admin-user-registration-form-email');
+  var $adminUserRegistrationFormTelephone = $('#admin-user-registration-form-telephone');
+  var $adminUserRegistrationFormRole1 = $('#admin-user-registration-form-role-1');
+  var $adminUserRegistrationFormRole2 = $('#admin-user-registration-form-role-2');
+  var $adminUserRegistrationFormSubmit = $('#admin-user-registration-form-submit');
+  var $adminUserRegistrationFormMessage = $('#admin-user-registration-form-message');
+
+  validateAdminUserRegistrationForm();
+
+  $($adminUserRegistrationFormBirthDateDay,
+    $adminUserRegistrationFormBirthDateMonth,
+    $adminUserRegistrationFormBirthDateYear).on('keypress', function(event) {
+    event = (event) ? event : window.event;
+
+    var charCode = (event.which) ? event.which : event.keyCode;
+    if (!isDigit(charCode)) {
+      event.preventDefault();
+      return false;
+    }
+
+    return true;
+  });
+
+  $adminUserRegistrationForm.find('input').on('input change', function(event) {
+    validateAdminUserRegistrationForm();
+
+    $adminUserRegistrationFormMessage.find('p').text('');
+    $adminUserRegistrationFormMessage.hide();
+  });
+
+  $adminUserRegistrationForm.submit(function(event) {
+    event.preventDefault();
+
+    $adminUserRegistrationFormSubmit.button('loading');
+
+    submitForm($(this), function(response) {
+      if (response.type === "error") {
+        $adminUserRegistrationFormMessage.show();
+        $adminUserRegistrationFormMessage.find('p').text(response.message);
+      } else {
+        $adminUserRegistrationFormMessage.hide();
+
+        $adminUserRegistrationForm.trigger('reset');
+      }
+
+      $adminUserRegistrationFormSubmit.button('reset');
+      $adminUserRegistrationFormSubmit.attr('disabled', true);
+    }, function(request, status, error) {
+      $adminUserRegistrationFormMessage.show();
+      $adminUserRegistrationFormMessage.find('p').text('Что-то пошло не так! Пожалуйста, попробуйте еще через некоторое время');
+
+      $adminUserRegistrationFormSubmit.button('reset');
+    });
+
+    return false;
+  });
+
+  function validateAdminUserRegistrationForm() {
+      var firstName = $adminUserRegistrationFormFirstName.val().trim();
+      var lastName = $adminUserRegistrationFormLastName.val().trim();
+      var birthDateDay = $adminUserRegistrationFormBirthDateDay.val().trim();
+      var birthDateMonth = $adminUserRegistrationFormBirthDateMonth.val().trim();
+      var birthDateYear = $adminUserRegistrationFormBirthDateYear.val().trim();
+      var birthDate = birthDateDay + "/" + birthDateMonth + "/" + birthDateYear;
+      var email = $adminUserRegistrationFormEmail.val().trim();
+
+      var disabled = true;
+      if (firstName.length > 0 && lastName.length > 0 && isValidEmail(email) &&
+        birthDateDay.length > 0 && birthDateMonth.length > 0 && birthDateYear > 0) {
+        disabled = false;
+      } else {
+        disabled = true
+      }
+
+      if (!disabled) {
+        disabled = !isActualDate(birthDateDay, birthDateMonth, birthDateYear);
+      }
+
+      $adminUserRegistrationFormSubmit.attr('disabled', disabled);
+    }
+});
+/*]]>*/
+</script>
 
 </body>
 </html>
