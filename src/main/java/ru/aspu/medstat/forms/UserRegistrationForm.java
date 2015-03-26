@@ -9,7 +9,6 @@ public class UserRegistrationForm {
     private String email = "";
     private String password = "";
     private String phone = "";
-    private int role = 1;
 
     public String getFirstName() {
         return firstName;
@@ -28,30 +27,30 @@ public class UserRegistrationForm {
     }
 
     public String getBirthDateDay() {
-		return birthDateDay;
-	}
+        return birthDateDay;
+    }
 
-	public void setBirthDateDay(String birthDateDay) {
-		this.birthDateDay = birthDateDay;
-	}
+    public void setBirthDateDay(String birthDateDay) {
+        this.birthDateDay = birthDateDay;
+    }
 
-	public String getBirthDateMonth() {
-		return birthDateMonth;
-	}
+    public String getBirthDateMonth() {
+        return birthDateMonth;
+    }
 
-	public void setBirthDateMonth(String birthDateMonth) {
-		this.birthDateMonth = birthDateMonth;
-	}
+    public void setBirthDateMonth(String birthDateMonth) {
+        this.birthDateMonth = birthDateMonth;
+    }
 
-	public String getBirthDateYear() {
-		return birthDateYear;
-	}
+    public String getBirthDateYear() {
+        return birthDateYear;
+    }
 
-	public void setBirthDateYear(String birthDateYear) {
-		this.birthDateYear = birthDateYear;
-	}
+    public void setBirthDateYear(String birthDateYear) {
+        this.birthDateYear = birthDateYear;
+    }
 
-	public String getEmail() {
+    public String getEmail() {
         return email;
     }
 
@@ -73,13 +72,5 @@ public class UserRegistrationForm {
 
     public void setPhone(String phone) {
         this.phone = phone.trim();
-    }
-
-    public int getRole() {
-        return role;
-    }
-
-    public void setRole(int role) {
-        this.role = role;
     }
 }

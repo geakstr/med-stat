@@ -2,93 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="layout/header :: head (title='Панель администратора')"></head>
 <body>
+<style>
+#admin-doctor-registration-form {
+    width: 300px;
+}
+</style>
 
 <h1>Панель администратора</h1>
 
 <hr/>
 
-<form th:action="@{/admin/users}" th:object="${UserRegistrationForm}" id="admin-user-registration-form" method="post" autocomplete="off">
-    <h2>Регистрация</h2>
-
+<form th:action="@{/admin/doctors}" th:object="${AdminDoctorRegistrationForm}" id="admin-doctor-registration-form" method="post" autocomplete="off">
     <div class="form-group">
-        <label for="admin-user-registration-form-first-name">Имя</label>
-        <input type="text" th:field="*{firstName}" class="form-control" id="admin-user-registration-form-first-name" autocomplete="off" placeholder="Владимир"/>
+        <label for="admin-doctor-registration-form-email">Электронная почта нового врача</label>
+        <input type="email" th:field="*{email}" class="form-control" id="admin-doctor-registration-form-email" autocomplete="off" placeholder="example@mail.ru"/>
     </div>
 
-    <div class="form-group">
-        <label for="admin-user-registration-form-last-name">Фамилия</label>
-        <input type="text" th:field="*{lastName}" class="form-control" id="admin-user-registration-form-last-name" autocomplete="off" placeholder="Иванов"/>
-    </div>
-
-    <div class="form-group">
-        <label for="admin-user-registration-form-email">Эл. почта</label>
-        <input type="email" th:field="*{email}" class="form-control" id="admin-user-registration-form-email" autocomplete="off" placeholder="example@mail.ru"/>
-    </div>
-
-    <div class="form-group">
-        <label for="admin-user-registration-form-phone">Телефон <small style="font-weight: 400; color: #999;">(не обязательно)</small></label>
-        <input type="text" th:field="*{phone}" class="form-control" id="admin-user-registration-form-phone" autocomplete="off" placeholder="79607008090"/>
-    </div>
-
-    <div class="form-group">
-        <label>Дата рождения</label>
-
-        <div class="clearfix">
-            <input type="text"
-                   th:field="*{birthDateDay}"
-                   id="admin-user-registration-form-birth-date-day"
-                   autocomplete="off"
-                   class="form-control"
-                   placeholder="дд"
-                   style="width: 15%; float: left; text-align:right;"/><!--
-            --><span style="width: 5%; padding: 6px 0; float: left; text-align: center">/</span><!--
-            --><input type="text"
-                   th:field="*{birthDateMonth}"
-                   id="admin-user-registration-form-birth-date-month"
-                   autocomplete="off"
-                   class="form-control"
-                   placeholder="мм"
-                   style="width: 15%; float: left; text-align:right;"/><!--
-            --><span style="width: 5%; padding: 6px 0; float: left; text-align: center">/</span><!--
-            --><input type="text"
-                   th:field="*{birthDateYear}"
-                   id="admin-user-registration-form-birth-date-year"
-                   autocomplete="off"
-                   class="form-control"
-                   placeholder="гггг"
-                   style="width: 20%; float: left; text-align:right;"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>Роль в системе</label>
-        <div>
-            <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-default active">
-                    <input type="radio"
-                           th:field="*{role}"
-                           th:checked="${true}"
-                           id="admin-user-registration-form-role-1"
-                           autocomplete="off"
-                           value="1"/> Пациент
-                </label>
-                <label class="btn btn-default">
-                    <input type="radio"
-                           th:field="*{role}"
-                           id="admin-user-registration-form-role-2"
-                           autocomplete="off"
-                           value="2"/> Врач
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <span id="admin-user-registration-form-message" class="help-block" style="display: none;">
+    <span id="admin-doctor-registration-form-message" class="help-block" style="display: none;">
         <p class="text-danger" style="white-space: pre-wrap;"></p>
     </span>
 
     <input type="submit"
-           id="admin-user-registration-form-submit"
+           id="admin-doctor-registration-form-submit"
            class="btn btn-success"
            data-loading-text="Письмо отправляется…"
            disabled="disabled"
@@ -100,91 +35,58 @@
 <script th:inline="javascript">
 /*<![CDATA[*/
 $(document).ready(function() {
-  var $adminUserRegistrationForm = $('#admin-user-registration-form');
-  var $adminUserRegistrationFormFirstName = $('#admin-user-registration-form-first-name');
-  var $adminUserRegistrationFormLastName = $('#admin-user-registration-form-last-name');
-  var $adminUserRegistrationFormBirthDateDay = $('#admin-user-registration-form-birth-date-day');
-  var $adminUserRegistrationFormBirthDateMonth = $('#admin-user-registration-form-birth-date-month');
-  var $adminUserRegistrationFormBirthDateYear = $('#admin-user-registration-form-birth-date-year');
-  var $adminUserRegistrationFormEmail = $('#admin-user-registration-form-email');
-  var $adminUserRegistrationFormTelephone = $('#admin-user-registration-form-telephone');
-  var $adminUserRegistrationFormRole1 = $('#admin-user-registration-form-role-1');
-  var $adminUserRegistrationFormRole2 = $('#admin-user-registration-form-role-2');
-  var $adminUserRegistrationFormSubmit = $('#admin-user-registration-form-submit');
-  var $adminUserRegistrationFormMessage = $('#admin-user-registration-form-message');
+  var $adminDoctorRegistrationForm = $('#admin-doctor-registration-form');
+  var $adminDoctorRegistrationFormEmail = $('#admin-doctor-registration-form-email');
+  var $adminDoctorRegistrationFormSubmit = $('#admin-doctor-registration-form-submit');
+  var $adminDoctorRegistrationFormMessage = $('#admin-doctor-registration-form-message');
 
-  validateAdminUserRegistrationForm();
+  validateAdminDoctorRegistrationForm();
 
-  $($adminUserRegistrationFormBirthDateDay,
-    $adminUserRegistrationFormBirthDateMonth,
-    $adminUserRegistrationFormBirthDateYear).on('keypress', function(event) {
-    event = (event) ? event : window.event;
+  $adminDoctorRegistrationForm.find('input').on('input change', function(event) {
+    validateAdminDoctorRegistrationForm();
 
-    var charCode = (event.which) ? event.which : event.keyCode;
-    if (!isDigit(charCode)) {
-      event.preventDefault();
-      return false;
-    }
-
-    return true;
+    $adminDoctorRegistrationFormMessage.find('p').text('');
+    $adminDoctorRegistrationFormMessage.hide();
   });
 
-  $adminUserRegistrationForm.find('input').on('input change', function(event) {
-    validateAdminUserRegistrationForm();
-
-    $adminUserRegistrationFormMessage.find('p').text('');
-    $adminUserRegistrationFormMessage.hide();
-  });
-
-  $adminUserRegistrationForm.submit(function(event) {
+  $adminDoctorRegistrationForm.submit(function(event) {
     event.preventDefault();
 
-    $adminUserRegistrationFormSubmit.button('loading');
+    $adminDoctorRegistrationFormSubmit.button('loading');
 
     submitForm($(this), function(response) {
       if (response.type === "error") {
-        $adminUserRegistrationFormMessage.show();
-        $adminUserRegistrationFormMessage.find('p').text(response.message);
+        $adminDoctorRegistrationFormMessage.show();
+        $adminDoctorRegistrationFormMessage.find('p').text(response.message);
       } else {
-        $adminUserRegistrationFormMessage.hide();
+        $adminDoctorRegistrationFormMessage.hide();
 
-        $adminUserRegistrationForm.trigger('reset');
+        $adminDoctorRegistrationForm.trigger('reset');
       }
 
-      $adminUserRegistrationFormSubmit.button('reset');
-      $adminUserRegistrationFormSubmit.attr('disabled', true);
+      $adminDoctorRegistrationFormSubmit.button('reset');
+      $adminDoctorRegistrationFormSubmit.attr('disabled', true);
     }, function(request, status, error) {
-      $adminUserRegistrationFormMessage.show();
-      $adminUserRegistrationFormMessage.find('p').text('Что-то пошло не так! Пожалуйста, попробуйте еще через некоторое время');
+      $adminDoctorRegistrationFormMessage.show();
+      $adminDoctorRegistrationFormMessage.find('p').text('Что-то пошло не так! Пожалуйста, попробуйте еще через некоторое время');
 
-      $adminUserRegistrationFormSubmit.button('reset');
+      $adminDoctorRegistrationFormSubmit.button('reset');
     });
 
     return false;
   });
 
-  function validateAdminUserRegistrationForm() {
-      var firstName = $adminUserRegistrationFormFirstName.val().trim();
-      var lastName = $adminUserRegistrationFormLastName.val().trim();
-      var birthDateDay = $adminUserRegistrationFormBirthDateDay.val().trim();
-      var birthDateMonth = $adminUserRegistrationFormBirthDateMonth.val().trim();
-      var birthDateYear = $adminUserRegistrationFormBirthDateYear.val().trim();
-      var birthDate = birthDateDay + "/" + birthDateMonth + "/" + birthDateYear;
-      var email = $adminUserRegistrationFormEmail.val().trim();
+  function validateAdminDoctorRegistrationForm() {
+      var email = $adminDoctorRegistrationFormEmail.val().trim();
 
       var disabled = true;
-      if (firstName.length > 0 && lastName.length > 0 && isValidEmail(email) &&
-        birthDateDay.length > 0 && birthDateMonth.length > 0 && birthDateYear > 0) {
+      if (isValidEmail(email)) {
         disabled = false;
       } else {
         disabled = true
       }
 
-      if (!disabled) {
-        disabled = !isActualDate(birthDateDay, birthDateMonth, birthDateYear);
-      }
-
-      $adminUserRegistrationFormSubmit.attr('disabled', disabled);
+      $adminDoctorRegistrationFormSubmit.attr('disabled', disabled);
     }
 });
 /*]]>*/

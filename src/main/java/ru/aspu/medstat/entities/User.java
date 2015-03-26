@@ -11,13 +11,13 @@ public class User {
     @Column(unique = true)
     public String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     public String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     public String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     public String birthDate;
 
     @Column(nullable = true)
@@ -32,8 +32,11 @@ public class User {
     @Column(nullable = true)
     public String emailToken;
 
-    @Column
+    @Column(nullable = false)
     public boolean emailApproved = false;
+
+    @Column(nullable = false)
+    public boolean wasLogin = false;
 
     public User() {}
 
