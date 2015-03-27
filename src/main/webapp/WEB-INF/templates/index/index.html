@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout/header :: head (title='Главная страница')"></head>
+<body>
+<style>
+    #user-registration-form {
+        width: 300px;
+    }
+</style>
+
+<h1>Главная страница</h1>
+
+<hr/>
+
+<form th:action="@{/users}" th:object="${UserRegistrationForm}" id="user-registration-form" method="post" autocomplete="off">
+    <h2>Регистрация</h2>
+
+    <div class="form-group">
+        <label for="user-registration-form-first-name">Имя</label>
+        <input type="text" th:field="*{firstName}" class="form-control" id="user-registration-form-first-name" autocomplete="off" placeholder="Владимир"/>
+    </div>
+
+    <div class="form-group">
+        <label for="user-registration-form-last-name">Фамилия</label>
+        <input type="text" th:field="*{lastName}" class="form-control" id="user-registration-form-last-name" autocomplete="off" placeholder="Иванов"/>
+    </div>
+
+    <div class="form-group">
+        <label for="user-registration-form-email">Эл. почта
+            <small style="font-weight: 400; color: #999;">(будет вашим логином для входа)</small>
+        </label>
+        <input type="email" th:field="*{email}" class="form-control" id="user-registration-form-email" autocomplete="off" placeholder="example@mail.ru"/>
+    </div>
+
+    <div class="form-group">
+        <label for="user-registration-form-phone">Телефон
+            <small style="font-weight: 400; color: #999;">(не обязательно)</small>
+        </label>
+        <input type="text" th:field="*{phone}" class="form-control" id="user-registration-form-phone" autocomplete="off" placeholder="79607008090"/>
+    </div>
+
+    <div class="form-group">
+        <label for="user-registration-form-password">Пароль</label>
+        <input type="password" th:field="*{password}" class="form-control" id="user-registration-form-password" autocomplete="off" placeholder="uWnp6x"/>
+        <span id="user-registration-form-password-helper" class="help-block" style="display: none;">
+            <p class="text-muted">Пароль слишком простой — это небезопасно. Хороший пароль содержит не менее 6 символов (как букв, так и цифр).</p>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label>Дата рождения</label>
+
+        <div class="clearfix">
+            <input type="text"
+                   th:field="*{birthDateDay}"
+                   id="user-registration-form-birth-date-day"
+                   autocomplete="off"
+                   class="form-control"
+                   placeholder="дд"
+                   style="width: 15%; float: left; text-align:right;"/><!--
+            --><span style="width: 5%; padding: 6px 0; float: left; text-align: center">/</span><!--
+            --><input type="text"
+                      th:field="*{birthDateMonth}"
+                      id="user-registration-form-birth-date-month"
+                      autocomplete="off"
+                      class="form-control"
+                      placeholder="мм"
+                      style="width: 15%; float: left; text-align:right;"/><!--
+            --><span style="width: 5%; padding: 6px 0; float: left; text-align: center">/</span><!--
+            --><input type="text"
+                      th:field="*{birthDateYear}"
+                      id="user-registration-form-birth-date-year"
+                      autocomplete="off"
+                      class="form-control"
+                      placeholder="гггг"
+                      style="width: 25%; float: left; text-align:right;"/>
+        </div>
+    </div>
+
+    <span id="user-registration-form-message" class="help-block" style="display: none;">
+        <p class="text-danger" style="white-space: pre-wrap;"></p>
+    </span>
+
+    <input type="submit"
+           id="user-registration-form-submit"
+           class="btn btn-success"
+           data-loading-text="Письмо отправляется…"
+           disabled="disabled"
+           value="Зарегистрироваться"/>
+</form>
+
+<span th:include="layout/footer :: scripts" class="hidden"></span>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function () {
+        var $userRegistrationForm = $('#user-registration-form');
+        var $userRegistrationFormFirstName = $('#user-registration-form-first-name');
+        var $userRegistrationFormLastName = $('#user-registration-form-last-name');
+        var $userRegistrationFormBirthDateDay = $('#user-registration-form-birth-date-day');
+        var $userRegistrationFormBirthDateMonth = $('#user-registration-form-birth-date-month');
+        var $userRegistrationFormBirthDateYear = $('#user-registration-form-birth-date-year');
+        var $userRegistrationFormEmail = $('#user-registration-form-email');
+        var $userRegistrationFormTelephone = $('#user-registration-form-telephone');
+        var $userRegistrationFormPassword = $('#user-registration-form-password');
+        var $userRegistrationFormPasswordHelper = $('#user-registration-form-password-helper');
+        var $userRegistrationFormSubmit = $('#user-registration-form-submit');
+        var $userRegistrationFormMessage = $('#user-registration-form-message');
+        var wasPasswordInputFocusOut = false;
+
+        validateUserRegistrationForm();
+
+        $($userRegistrationFormBirthDateDay,
+                $userRegistrationFormBirthDateMonth,
+                $userRegistrationFormBirthDateYear).on('keypress', function (event) {
+                    event = (event) ? event : window.event;
+
+                    var charCode = (event.which) ? event.which : event.keyCode;
+                    if (!isDigit(charCode)) {
+                        event.preventDefault();
+                        return false;
+                    }
+
+                    return true;
+                });
+
+        $userRegistrationForm.find('input').on('input change', function (event) {
+            validateUserRegistrationForm();
+
+            $userRegistrationFormMessage.find('p').text('');
+            $userRegistrationFormMessage.hide();
+        });
+
+        $userRegistrationFormPassword.focusout(function () {
+            wasPasswordInputFocusOut = true;
+            validatePassword();
+        });
+
+        $userRegistrationFormPassword.on('input change', function (event) {
+            validatePassword();
+        });
+
+        $userRegistrationForm.submit(function (event) {
+            event.preventDefault();
+
+            $userRegistrationFormSubmit.button('loading');
+
+            submitForm($(this), function (response) {
+                if (response.type === "error") {
+                    $userRegistrationFormMessage.show();
+                    $userRegistrationFormMessage.find('p').text(response.message);
+                } else {
+                    $userRegistrationFormMessage.hide();
+
+                    $userRegistrationForm.trigger('reset');
+                }
+
+                $userRegistrationFormSubmit.button('reset');
+                $userRegistrationFormSubmit.attr('disabled', true);
+            }, function (request, status, error) {
+                $userRegistrationFormMessage.show();
+                $userRegistrationFormMessage.find('p').text('Что-то пошло не так! Пожалуйста, попробуйте еще через некоторое время');
+
+                $userRegistrationFormSubmit.button('reset');
+            });
+
+            return false;
+        });
+
+        function validateUserRegistrationForm() {
+            var firstName = $userRegistrationFormFirstName.val().trim();
+            var lastName = $userRegistrationFormLastName.val().trim();
+            var birthDateDay = $userRegistrationFormBirthDateDay.val().trim();
+            var birthDateMonth = $userRegistrationFormBirthDateMonth.val().trim();
+            var birthDateYear = $userRegistrationFormBirthDateYear.val().trim();
+            var email = $userRegistrationFormEmail.val().trim();
+            var password = $userRegistrationFormPassword.val().trim();
+
+            var disabled = true;
+            if (firstName.length > 0 && lastName.length > 0 && isValidEmail(email) &&
+                    birthDateDay.length > 0 && birthDateMonth.length > 0 && password.length >= 6 && birthDateYear > 0) {
+                disabled = false;
+            } else {
+                disabled = true
+            }
+
+            if (!disabled) {
+                disabled = !isActualDate(birthDateDay, birthDateMonth, birthDateYear);
+            }
+
+            $userRegistrationFormSubmit.attr('disabled', disabled);
+        }
+
+        function validatePassword() {
+            if (wasPasswordInputFocusOut) {
+                var password = $userRegistrationFormPassword.val().trim();
+                if (isReliablePassword(password)) {
+                    $userRegistrationFormPasswordHelper.hide();
+                } else {
+                    $userRegistrationFormPasswordHelper.show();
+                }
+            }
+        }
+    });
+    /*]]>*/
+</script>
+
+</body>
+</html>
