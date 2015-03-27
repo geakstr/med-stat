@@ -1,14 +1,31 @@
 package ru.aspu.medstat.forms;
 
-public class UserRegistrationForm {
-    private String firstName = "";
-    private String lastName = "";
-    private String birthDateDay = "";
-    private String birthDateMonth = "";
-    private String birthDateYear = "";
-    private String email = "";
-    private String password = "";
-    private String phone = "";
+public class UserRegistrationForm extends Form {
+    protected String firstName = "";
+    protected String lastName = "";
+    protected String birthDateDay = "";
+    protected String birthDateMonth = "";
+    protected String birthDateYear = "";
+    protected String email = "";
+    protected String password = "";
+    protected String phone = "";
+    protected String emailToken = "";
+    
+    public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
 
     public String getFirstName() {
         return firstName;
@@ -31,7 +48,7 @@ public class UserRegistrationForm {
     }
 
     public void setBirthDateDay(String birthDateDay) {
-        this.birthDateDay = birthDateDay;
+        this.birthDateDay = birthDateDay.trim();
     }
 
     public String getBirthDateMonth() {
@@ -39,7 +56,7 @@ public class UserRegistrationForm {
     }
 
     public void setBirthDateMonth(String birthDateMonth) {
-        this.birthDateMonth = birthDateMonth;
+        this.birthDateMonth = birthDateMonth.trim();
     }
 
     public String getBirthDateYear() {
@@ -47,7 +64,7 @@ public class UserRegistrationForm {
     }
 
     public void setBirthDateYear(String birthDateYear) {
-        this.birthDateYear = birthDateYear;
+        this.birthDateYear = birthDateYear.trim();
     }
 
     public String getEmail() {
@@ -73,4 +90,11 @@ public class UserRegistrationForm {
     public void setPhone(String phone) {
         this.phone = phone.trim();
     }
+    
+    public String getEmailToken() {
+		return emailToken;
+	}
+	public void setEmailToken(String emailToken) {
+		this.emailToken = emailToken;
+	}
 }

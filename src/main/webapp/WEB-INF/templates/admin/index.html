@@ -54,7 +54,7 @@ $(document).ready(function() {
 
     $adminDoctorRegistrationFormSubmit.button('loading');
 
-    submitForm($(this), function(response) {
+    submitForm($(this), 10000, function(response) {
       if (response.type === "error") {
         $adminDoctorRegistrationFormMessage.show();
         $adminDoctorRegistrationFormMessage.find('p').text(response.message);

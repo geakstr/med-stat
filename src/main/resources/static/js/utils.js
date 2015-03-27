@@ -33,21 +33,27 @@ function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-function submitForm($form, success, error) {
+function submitForm($form, timeout, success, error) {
   var action = $form.attr('action');
   var json = formToJson($form);
-
   $.ajax({
     type: 'POST',
     url: action,
     dataType: "json",
+    timeout: timeout,
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
     data: JSON.stringify(json),
-    success: success,
-    error: error
+  }).done(function(data) {
+    success(data);
+  }).fail(function(jqXHR, textStatus, err) {
+    if (textStatus == 'timeout') {
+      alert('Истекло время ожидания. Попробуйте еще раз');
+    }
+    alert(err);
+    error(jqXHR, textStatus, err);
   });
 }
 
