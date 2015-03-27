@@ -30,6 +30,26 @@
            value="Зарегистрировать"/>
 </form>
 
+<form th:action="@{/admin/requests}" th:object="${AdminSetDoctorToPacientForm}" method="post" autocomplete="off">
+	<div class="form-group">
+		<label for="admin-set-doctor-to-pacient-form-pacient">Выберите пациента:</label>
+		<select id="admin-set-doctor-to-pacient-form-pacient" name="selectPacient" th:field="*{pacient}">
+			<option th:each="p:${usersList}" th:value="${p.id}" th:text="${p.lastName}"/>
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="admin-set-doctor-to-pacient-form-doctor">Выберите доктора:</label>
+		<select id="admin-set-doctor-to-pacient-form-doctor" name="selectDoctor" th:field="*{doctor}">
+			<option th:each="d:${doctorsList}" th:value="${d.id}" th:text="${d.lastName}"/>
+		</select> 
+	</div>
+	
+	<input type="submit"
+		   id="admin-set-doctor-to-pacient-form-submit"
+		   class="btn btn-success"
+		   value="Утвердить"/>
+</form>
+
 <span th:include="layout/footer :: scripts" class="hidden"></span>
 
 <script th:inline="javascript">

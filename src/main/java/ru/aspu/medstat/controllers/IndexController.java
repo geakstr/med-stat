@@ -1,5 +1,9 @@
 package ru.aspu.medstat.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -9,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import ru.aspu.medstat.entities.User;
 import ru.aspu.medstat.entities.UserRoles;
 import ru.aspu.medstat.forms.UserRegistrationForm;
@@ -20,9 +25,6 @@ import ru.aspu.medstat.services.MailService;
 import ru.aspu.medstat.utils.EmailUtils;
 import ru.aspu.medstat.utils.FormatUtils;
 import ru.aspu.medstat.utils.PasswordUtils;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 @Controller
 public class IndexController {
@@ -89,6 +91,7 @@ public class IndexController {
         user.phone = FormatUtils.normalizePhoneNumber(form.getPhone());
         user.role = UserRoles.PATIENT;
         user.emailToken = PasswordUtils.generate(32);
+        user.registrationDate = birthDateFormat.format(new Date());
 
         mail.send(user.email, "Медицинский портал АГУ. Регистрация", String.format(
                 "<a href=\"http://localhost:8080/mail/confirm/%s\">Нажмите сюда для окончания регистрации</a>",

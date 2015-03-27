@@ -35,7 +35,7 @@ dependencies {
     //compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
 
-    compile("org.hibernate:hibernate-validator")
+   // compile("org.hibernate:hibernate-validator")
     compile("com.h2database:h2")
     compile("javax.mail:mail:1.4.7")
 

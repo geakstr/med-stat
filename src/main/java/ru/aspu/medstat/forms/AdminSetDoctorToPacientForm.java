@@ -1,0 +1,24 @@
+package ru.aspu.medstat.forms;
+
+import ru.aspu.medstat.entities.User;
+
+public class AdminSetDoctorToPacientForm {
+	private long pacient;
+	private long doctor;
+	
+	public long getPacient() {
+		return pacient;
+	}
+	
+	public void setPacient(long pacient) {
+		this.pacient = pacient;
+	}
+	
+	public long getDoctor() {
+		return doctor;
+	}
+	
+	public void setDoctor(long doctor) {
+		this.doctor = doctor;
+	}
+}
