@@ -34,8 +34,6 @@ public class UsersController {
     @RequestMapping(value = "/**", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public IResponse registerUser(@RequestBody UserRegistrationForm form) {
-    	System.out.println("Test");
-    	
     	String error = "";
     	
     	User user = usersRepo.findByEmail(form.getEmail());

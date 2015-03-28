@@ -49,7 +49,7 @@ public class AdminController {
     public IResponse registerDoctor(@RequestBody AdminDoctorRegistrationForm form) {
         String error = "";
         if (null != usersRepo.findByEmail(form.getEmail())) {
-            error += "Доктор с такой эл. почтой уже зарегистрирован\n";
+            error += "Такая эл. почта уже занята\n";
         }
         if (!EmailUtils.validate(form.getEmail())) {
             error += "Невалидный адрес эл. почты. Принимается паттерн вида *@*\n";

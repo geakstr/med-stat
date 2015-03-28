@@ -53,6 +53,7 @@ public class MailController {
         
         model.addAttribute("title", "Подтверждение регистрации");
         model.addAttribute("regform", form);
+        model.addAttribute("regformEmailDisabled", true);
 
         return "mail/confirm";
     }
