@@ -1,13 +1,13 @@
 package ru.aspu.medstat.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.security.SecureRandom;
 
 public class PasswordUtils {
-    private final static SecureRandom random = new SecureRandom();
 
-    public static boolean validate(String password) {
-        return true;
-    }
+    private final static SecureRandom random = new SecureRandom();
 
     public static String generate(int len) {
         char[] chars = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ".toCharArray();
@@ -41,4 +41,7 @@ public class PasswordUtils {
         }
         return password.toString();
     }
+
+
 }
+

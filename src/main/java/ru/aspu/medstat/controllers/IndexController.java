@@ -17,7 +17,7 @@ public class IndexController {
         model.addAttribute("regformEmailDisabled", false);
 
         UserRegistrationForm form = new UserRegistrationForm();
-        form.setAction("/users");
+        form.setAction("/auth/register");
         form.setMethod("post");
         model.addAttribute("regform", form);
 

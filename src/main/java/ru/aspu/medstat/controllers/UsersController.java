@@ -25,40 +25,4 @@ import ru.aspu.medstat.utils.PasswordUtils;
 public class UsersController {
     private static final Logger log = Logger.getLogger(UsersController.class);
 
-    @Autowired
-    private UserRepository usersRepo;
-    
-    @Autowired
-    private UsersService usersService;
-
-    @RequestMapping(value = "/**", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public IResponse registerUser(@RequestBody UserRegistrationForm form) {
-    	String error = "";
-    	
-    	User user = usersRepo.findByEmail(form.getEmail());
-    	if (null != user) {
-    		error += "Пользователь с такой эл. почтой уже зарегистрирован\n";
-    		return new ErrorResponse(error);
-        }
-    	
-    	user = new User();
-        user.email = form.getEmail();
-        user.firstName = form.getFirstName();
-        user.lastName = form.getLastName();
-        user.password = form.getPassword();
-        user.birthDate = form.getBirthDateDay() + "/" + form.getBirthDateMonth() + "/" + form.getBirthDateYear();
-        user.phone = FormatUtils.normalizePhoneNumber(form.getPhone());
-        user.role = UserRoles.PATIENT;
-        user.emailToken = PasswordUtils.generate(32);
-    	
-        error += usersService.getErrors(user);
-        if (error.length() != 0) {
-            return new ErrorResponse(error);
-        }
-        
-        usersService.sendMail(user);
-
-        return new UserResponse(usersRepo.save(user));
-    }
 }

@@ -1,5 +1,8 @@
 package ru.aspu.medstat.entities;
 
+import ru.aspu.medstat.utils.PasswordCrypto;
+import ru.aspu.medstat.utils.PasswordUtils;
+
 import javax.persistence.*;
 
 @Entity
@@ -39,6 +42,13 @@ public class User {
     public boolean wasLogin = false;
 
     public User() {}
+
+    public static User create(String email, String password) {
+        User user = new User();
+        user.email = email;
+        user.password = PasswordCrypto.getInstance().encrypt(password);
+        return user;
+    }
 
     @Override
     public String toString() {
