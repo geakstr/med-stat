@@ -13,12 +13,12 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 @Configuration
 @PropertySource("classpath:thymeleaf.properties")
 public class ThymeleafConfiguration {
-	@Value("${spring.thymeleaf.cache}")
+    @Value("${spring.thymeleaf.cache}")
     public boolean cacheable;
-	
-	@Value("${spring.thymeleaf.prefix}")
+
+    @Value("${spring.thymeleaf.prefix}")
     public String prefix;
-	
+
     @Bean
     public TemplateResolver templateResolver() {
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
