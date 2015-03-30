@@ -10,22 +10,22 @@ public class UserRegistrationForm extends Form {
     protected String password = "";
     protected String phone = "";
     protected String emailToken = "";
-    
+
     public String getAction() {
-		return action;
-	}
+        return action;
+    }
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+    public void setAction(String action) {
+        this.action = action;
+    }
 
-	public String getMethod() {
-		return method;
-	}
+    public String getMethod() {
+        return method;
+    }
 
-	public void setMethod(String method) {
-		this.method = method;
-	}
+    public void setMethod(String method) {
+        this.method = method;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -90,11 +90,12 @@ public class UserRegistrationForm extends Form {
     public void setPhone(String phone) {
         this.phone = phone.trim();
     }
-    
+
     public String getEmailToken() {
-		return emailToken;
-	}
-	public void setEmailToken(String emailToken) {
-		this.emailToken = emailToken;
-	}
+        return emailToken;
+    }
+
+    public void setEmailToken(String emailToken) {
+        this.emailToken = emailToken;
+    }
 }

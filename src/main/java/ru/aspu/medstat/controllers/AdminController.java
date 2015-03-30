@@ -5,12 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ru.aspu.medstat.entities.User;
 import ru.aspu.medstat.forms.AdminDoctorRegistrationForm;
+import ru.aspu.medstat.forms.AdminSetDoctorToPacientForm;
 import ru.aspu.medstat.repositories.UserRepository;
 import ru.aspu.medstat.responses.ErrorResponse;
 import ru.aspu.medstat.responses.IResponse;
@@ -19,6 +17,9 @@ import ru.aspu.medstat.services.MailService;
 import ru.aspu.medstat.services.UsersService;
 import ru.aspu.medstat.utils.EmailUtils;
 import ru.aspu.medstat.utils.PasswordUtils;
+
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 @Controller
 @RequestMapping("/admin")
@@ -32,12 +33,15 @@ public class AdminController {
     private UsersService usersService;
 
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     private MailService mail;
 
     @RequestMapping("/*")
     public String index(Model model) {
         model.addAttribute("AdminDoctorRegistrationForm", new AdminDoctorRegistrationForm());
+        model.addAttribute("AdminSetDoctorToPacientForm", new AdminSetDoctorToPacientForm());
+
+        model.addAttribute("usersList", usersRepo.findAllNewUsers());
+        model.addAttribute("doctorsList", usersRepo.findAllDoctors());
 
         return "admin/index";
     }
@@ -67,5 +71,25 @@ public class AdminController {
         usersService.sendMail(doctor);
 
         return new UserResponse(usersRepo.save(doctor));
+    }
+
+
+    @RequestMapping(value = "/requests", method = RequestMethod.POST)
+    @ResponseBody
+    public IResponse setDoctorToPacient(@ModelAttribute AdminSetDoctorToPacientForm form, @ModelAttribute ArrayList<User> usersList, Model model) {
+        final User user = usersRepo.findOne(form.getPacient());
+        if (null == user) {
+            return new ErrorResponse("Пациент не выбран\n");
+        }
+        user.doctorId = form.getDoctor();
+
+        for (ListIterator<User> iter = usersList.listIterator(); iter.hasNext(); ) {
+            User someUser = iter.next();
+            if (user.equals(someUser)) {
+                iter.remove();
+            }
+        }
+
+        return new UserResponse(usersRepo.save(user));
     }
 }

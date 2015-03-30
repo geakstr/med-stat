@@ -5,8 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import ru.aspu.medstat.forms.UserRegistrationForm;
-
 @Controller
 public class IndexController {
     private static final Logger log = Logger.getLogger(IndexController.class);

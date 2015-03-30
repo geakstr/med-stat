@@ -1,20 +1,15 @@
 package ru.aspu.medstat.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ru.aspu.medstat.entities.User;
+import ru.aspu.medstat.utils.EmailUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import ru.aspu.medstat.entities.User;
-import ru.aspu.medstat.repositories.UserRepository;
-import ru.aspu.medstat.utils.EmailUtils;
-
 @Service
 public class UsersService {
-    @Autowired
-    private UserRepository usersRepo;
-
     @Autowired
     private MailService mail;
 

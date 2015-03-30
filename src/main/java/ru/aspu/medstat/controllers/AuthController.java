@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import ru.aspu.medstat.entities.User;
 import ru.aspu.medstat.forms.UserRegistrationForm;
 import ru.aspu.medstat.repositories.UserRepository;
@@ -34,7 +33,7 @@ public class AuthController {
     public String indexPage(Model model) {
         return "auth/login";
     }
-    
+
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerUserPage(Model model) {
         model.addAttribute("title", "Главная страница");
