@@ -1,6 +1,6 @@
 package ru.aspu.medstat.forms;
 
-public class AdminDoctorRegistrationForm {
+public class AdminDoctorRegistrationForm extends Form {
     private String email = "";
 
     public String getEmail() {

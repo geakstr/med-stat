@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import ru.aspu.medstat.entities.User;
 import ru.aspu.medstat.entities.UserRoles;
 import ru.aspu.medstat.forms.UserRegistrationForm;
@@ -31,8 +32,21 @@ public class AuthController {
     private UsersService usersService;
 
     @RequestMapping("/login")
-    public String index(Model model) {
+    public String indexPage(Model model) {
         return "auth/login";
+    }
+    
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String registerUserPage(Model model) {
+        model.addAttribute("title", "Главная страница");
+        model.addAttribute("regformEmailDisabled", false);
+
+        UserRegistrationForm form = new UserRegistrationForm();
+        form.setAction("/auth/register");
+        form.setMethod("post");
+        model.addAttribute("regform", form);
+
+        return "auth/register";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,7 +78,7 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/confirm/{mailToken}", method = RequestMethod.GET)
-    public String confirm(@PathVariable String mailToken, Model model) {
+    public String confirmPage(@PathVariable String mailToken, Model model) {
         final User user = userRepository.findByEmailToken(mailToken);
         if (user == null || (user.emailApproved)) {
             return "redirect:/";

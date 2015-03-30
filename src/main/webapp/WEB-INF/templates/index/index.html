@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:with="title='Главная страница'">
 <head th:include="layout/header :: head (title=${title})"></head>
 <body>
 
-<span th:include="forms/user-registration :: reg-form-styles" class="hidden"></span>
+<div th:include="layout/header :: header (title=${title},titleLink=#{false})"></div>
 
-<div th:include="layout/header :: header (title=${title})"></div>
-
-<span th:include="forms/user-registration :: reg-form"></span>
+<a href="/auth/login">Вход</a> | <a href="/auth/register">Регистрация</a>
 
 <span th:include="layout/footer :: scripts" class="hidden"></span>
-
-<span th:include="forms/user-registration :: reg-form-js" class="hidden"></span>
 
 </body>
 </html>

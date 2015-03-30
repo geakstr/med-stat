@@ -13,14 +13,6 @@ public class IndexController {
 
     @RequestMapping("/")
     public String index(Model model) {
-        model.addAttribute("title", "Главная страница");
-        model.addAttribute("regformEmailDisabled", false);
-
-        UserRegistrationForm form = new UserRegistrationForm();
-        form.setAction("/auth/register");
-        form.setMethod("post");
-        model.addAttribute("regform", form);
-
         return "index/index";
     }
 }

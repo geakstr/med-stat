@@ -9,8 +9,12 @@
   <link rel="stylesheet" href="/static/css/style.css"/>
 </div>
 
-<div th:fragment="header (title)">
-<h1 th:text="${title}"></h1>
+<div th:fragment="header (title, titleLink)">
+
+<div th:switch="${titleLink}">
+  <h1 th:case="#{false}" th:text="${title}"></h1>
+  <h1 th:case="#{true}"><a href="/">Главная страница</a></h1>
+</div>
 
 <hr/>
 </div>
