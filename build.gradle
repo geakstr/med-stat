@@ -34,6 +34,7 @@ dependencies {
     compile("org.springframework:spring-context-support")
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity3:2.1.2.RELEASE")
 
     compile("org.hibernate:hibernate-validator")
     compile("com.h2database:h2")

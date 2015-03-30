@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ru.aspu.medstat.entities.User;
-import ru.aspu.medstat.entities.UserRoles;
 import ru.aspu.medstat.forms.AdminDoctorRegistrationForm;
 import ru.aspu.medstat.repositories.UserRepository;
 import ru.aspu.medstat.responses.ErrorResponse;
@@ -61,7 +60,7 @@ public class AdminController {
         final User doctor = new User();
 
         doctor.email = form.getEmail();
-        doctor.role = UserRoles.DOCTOR;
+        doctor.role = User.Roles.DOCTOR.getValue();
         doctor.wasLogin = true;
         doctor.emailToken = PasswordUtils.generate(32);
 

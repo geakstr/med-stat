@@ -14,19 +14,20 @@
 <form th:action="@{/auth/login}" id="login-form" method="post">
     <h2>Вход</h2>
 
-    <div th:if="${param.error}" class="alert alert-error">
-        Нет такого логина/пароль
-    </div>
-    <div th:if="${param.logout}" class="alert alert-success">
-        Вы вышли
-    </div>
     <div class="form-group">
         <label for="username">Эл. почта</label>
-        <input type="text" id="username" name="username" class="form-control"/>
+        <input type="text" id="username" name="username" placeholder="example@mail.ru" class="form-control"/>
     </div>
     <div class="form-group">
         <label for="password">Пароль</label>
-        <input type="password" id="password" name="password" class="form-control"/>
+        <input type="password" id="password" name="password" placeholder="uWnp6x" class="form-control"/>
+    </div>
+
+    <div th:if="${param.error}" class="help-block">
+        Нет такого логина/пароля
+    </div>
+    <div th:if="${param.logout}" class="help-block">
+        Вы вышли
     </div>
 
     <input type="submit"

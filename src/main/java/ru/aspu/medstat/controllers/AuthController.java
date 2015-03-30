@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import ru.aspu.medstat.entities.User;
-import ru.aspu.medstat.entities.UserRoles;
 import ru.aspu.medstat.forms.UserRegistrationForm;
 import ru.aspu.medstat.repositories.UserRepository;
 import ru.aspu.medstat.responses.ErrorResponse;
@@ -64,7 +63,7 @@ public class AuthController {
         user.lastName = form.getLastName();
         user.birthDate = form.getBirthDateDay() + "/" + form.getBirthDateMonth() + "/" + form.getBirthDateYear();
         user.phone = FormatUtils.normalizePhoneNumber(form.getPhone());
-        user.role = UserRoles.PATIENT;
+        user.role = User.Roles.PATIENT.getValue();
         user.emailToken = PasswordUtils.generate(32);
 
         error += usersService.getErrors(user);
@@ -84,7 +83,7 @@ public class AuthController {
             return "redirect:/";
         }
 
-        if (user.role == UserRoles.PATIENT) {
+        if (user.role == User.Roles.PATIENT.getValue()) {
             user.emailApproved = true;
             userRepository.save(user);
             return "redirect:/";
