@@ -17,7 +17,6 @@ public class MailService {
     public MailConfiguration config;
 
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     private JavaMailSender sender;
 
     public boolean send(String to, String subject, String content) {

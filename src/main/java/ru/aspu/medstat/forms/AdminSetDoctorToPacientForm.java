@@ -1,6 +1,5 @@
 package ru.aspu.medstat.forms;
 
-import ru.aspu.medstat.entities.User;
 
 public class AdminSetDoctorToPacientForm {
 	private long pacient;

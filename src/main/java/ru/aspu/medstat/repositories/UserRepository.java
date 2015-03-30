@@ -20,7 +20,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.emailToken = :emailToken")
     public User findByEmailToken(@Param("emailToken") String emailToken);
     
-    @Query("SELECT u FROM User u WHERE u.doctorId = -1 AND u.role = 1 ORDER BY u.registrationDate")
+    @Query("SELECT u FROM User u WHERE u.doctorId = -1 AND u.role = 1 ORDER BY u.registrationDate DESC")
     public List<User> findAllNewUsers();
     
     @Query("SELECT u FROM User u WHERE u.role = 2")

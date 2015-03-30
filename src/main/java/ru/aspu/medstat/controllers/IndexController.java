@@ -2,7 +2,6 @@ package ru.aspu.medstat.controllers;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,6 @@ public class IndexController {
     private UserRepository repo;
 
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     private MailService mail;
 
     private SimpleDateFormat birthDateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -91,7 +89,6 @@ public class IndexController {
         user.phone = FormatUtils.normalizePhoneNumber(form.getPhone());
         user.role = UserRoles.PATIENT;
         user.emailToken = PasswordUtils.generate(32);
-        user.registrationDate = birthDateFormat.format(new Date());
 
         mail.send(user.email, "Медицинский портал АГУ. Регистрация", String.format(
                 "<a href=\"http://localhost:8080/mail/confirm/%s\">Нажмите сюда для окончания регистрации</a>",
