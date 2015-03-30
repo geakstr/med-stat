@@ -37,7 +37,9 @@ dependencies {
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity3:2.1.2.RELEASE")
 
    // compile("org.hibernate:hibernate-validator")
-    compile("com.h2database:h2")
+    //compile("com.h2database:h2")
+
+    compile("org.mariadb.jdbc:mariadb-java-client:1.1.8")
     compile("javax.mail:mail:1.4.7")
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
