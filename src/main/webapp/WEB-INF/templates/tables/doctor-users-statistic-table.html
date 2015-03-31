@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="table">
+
+<table class="table-hover" style="width: 48%; float: left;">
+    <thead>
+    <tr>
+        <th>Имя</th>
+        <th>Упражнение</th>
+        <th>Прогресс</th>
+        <th>Дата</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="s:${userStats}">
+        <td th:text="${s.user.lastName} + ', ' + ${s.user.firstName}"></td>
+        <td th:text="${s.gymnastic.title}"></td>
+        <td th:text="${s.percent}" style="width: 1px; text-align: right;"></td>
+        <td th:text="${#dates.format(s.date, 'dd/MM/yyyy')}" style="width: 1px;"></td>
+    </tr>
+    </tbody>
+</table>
+
+</div>
+</body>
+</html>

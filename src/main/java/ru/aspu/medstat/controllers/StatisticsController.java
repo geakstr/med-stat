@@ -34,97 +34,38 @@ public class StatisticsController {
 
     @RequestMapping("/")
     public String index(Model model) {
-        User u1 = new User();
-        User u2 = new User();
-        User u3 = new User();
-        User u4 = new User();
-        User u5 = new User();
-
-        u1.lastName = "Pacient #1";
-        u1.role = User.Roles.PATIENT.getValue();
-
-        u2.lastName = "Pacient #2";
-        u2.role = User.Roles.PATIENT.getValue();
-
-        u3.lastName = "Pacient #3";
-        u3.role = User.Roles.PATIENT.getValue();
-
-        u4.lastName = "Doctor #1";
-        u4.role = User.Roles.DOCTOR.getValue();
-
-        u5.lastName = "Doctor #2";
-        u5.role = User.Roles.DOCTOR.getValue();
-
-        userRepo.save(u1);
-        userRepo.save(u2);
-        userRepo.save(u3);
-        userRepo.save(u4);
-        userRepo.save(u5);
-
-        Gymnastic g1 = new Gymnastic();
-        Gymnastic g2 = new Gymnastic();
-        Gymnastic g3 = new Gymnastic();
-
-        g1.title = "Gymnastic #1";
-        g2.title = "Gymnastic #2";
-        g3.title = "Gymnastic #3";
-
-        gymRepo.save(g1);
-        gymRepo.save(g2);
-        gymRepo.save(g3);
-
-        Statistic s1 = new Statistic();
-        Statistic s2 = new Statistic();
-        Statistic s3 = new Statistic();
-        Statistic s4 = new Statistic();
-        Statistic s5 = new Statistic();
-        Statistic s6 = new Statistic();
-        Statistic s7 = new Statistic();
-        Statistic s8 = new Statistic();
-        Statistic s9 = new Statistic();
-
-        s1.percent = 100.0;
-        s1.setGymnastic(g1);
-
-        s2.percent = 100.0;
-        s2.setGymnastic(g2);
-
-        s3.percent = 100.0;
-        s3.setGymnastic(g3);
-
-        s4.percent = 100.0;
-        s4.setGymnastic(g1);
-
-        s5.percent = 50.0;
-        s5.setGymnastic(g1);
-
-        s6.percent = 50.0;
-        s6.setGymnastic(g2);
-
-        s7.percent = 10.0;
-        s7.setGymnastic(g1);
-
-        s8.percent = 20.0;
-        s8.setGymnastic(g1);
-
-        s9.percent = 30.0;
-        s9.setGymnastic(g3);
-
-        u1.addStatistic(s1);
-        u1.addStatistic(s2);
-        u1.addStatistic(s3);
-        u2.addStatistic(s4);
-        u2.addStatistic(s5);
-        u3.addStatistic(s6);
-        u3.addStatistic(s7);
-        u3.addStatistic(s8);
-        u4.addStatistic(s9);
-
-        userRepo.save(u1);
-        userRepo.save(u2);
-        userRepo.save(u3);
-        userRepo.save(u4);
-        userRepo.save(u5);
+//        User u1 = userRepo.findOne((long) 3);
+//
+//        Gymnastic g1 = new Gymnastic();
+//        Gymnastic g2 = new Gymnastic();
+//        Gymnastic g3 = new Gymnastic();
+//
+//        g1.title = "Gymnastic #1";
+//        g2.title = "Gymnastic #2";
+//        g3.title = "Gymnastic #3";
+//
+//        gymRepo.save(g1);
+//        gymRepo.save(g2);
+//        gymRepo.save(g3);
+//
+//        Statistic s1 = new Statistic();
+//        Statistic s2 = new Statistic();
+//        Statistic s3 = new Statistic();
+//
+//        s1.percent = 100.0;
+//        s1.setGymnastic(g1);
+//
+//        s2.percent = 100.0;
+//        s2.setGymnastic(g2);
+//
+//        s3.percent = 100.0;
+//        s3.setGymnastic(g3);
+//
+//        u1.addStatistic(s1);
+//        u1.addStatistic(s2);
+//        u1.addStatistic(s3);
+//
+//        userRepo.save(u1);
 
         return "stats/index";
     }

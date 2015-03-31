@@ -35,7 +35,7 @@ public class AdminController {
     @Autowired
     private MailService mail;
 
-    @RequestMapping("/*")
+    @RequestMapping("/")
     public String index(Model model) {
         model.addAttribute("AdminDoctorRegistrationForm", new AdminDoctorRegistrationForm());
         model.addAttribute("AdminSetDoctorToPacientForm", new AdminSetDoctorToPacientForm());

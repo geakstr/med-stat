@@ -1,13 +1,29 @@
 body {
-    width: 90%;
+    max-width: 960px;
     margin: 0 auto;
     background: #fff;
     color: #333;
-    font-family: Verdana, Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 14px;
     line-height: 22px;
 }
 
 form {
     display: block;
+}
+
+table, tr, thead, tbody, tfoot {
+    margin: 0!important;
+    padding: 0!important;
+}
+td, th {
+    margin: 0!important;
+    padding: 3px 11px!important;
+    font-size: 13px;
+    vertical-align: top;
+}
+
+th {
+    padding-top: 0!important;
+    padding-bottom: 0!important;
 }

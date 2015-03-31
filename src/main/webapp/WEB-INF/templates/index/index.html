@@ -10,8 +10,18 @@
 </div>
 
 <div sec:authorize="isAuthenticated()">
-  <a href="/auth/logout">Выход</a>
-</div> 
+  <span sec:authorize="hasRole('ROLE_ADMIN')">
+    <a href="/admin/">Панель администратора</a>
+  </span>
+
+  <span sec:authorize="!hasRole('ROLE_ADMIN')">
+    <a href="/lk/">Личный кабинет</a>
+  </span>
+
+  | <a href="/auth/logout">Выход</a>
+</div>
+
+
 
 <span th:include="layout/footer :: scripts" class="hidden"></span>
 
