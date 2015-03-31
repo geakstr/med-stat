@@ -18,13 +18,13 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     public String email;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name", nullable = true)
     public String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name", nullable = true)
     public String lastName;
 
-    @Column(name = "birth_date", nullable = false)
+    @Column(name = "birth_date", nullable = true)
     public String birthDate;
 
     @Column(name = "password", nullable = true)
