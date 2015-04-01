@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:with="title='Личный кабинет'">
+<head th:include="layout/header :: head (title=${title})"></head>
+<body>
+
+<div th:include="layout/header :: header (title=${title},titleLink=#{true})"></div>
+
+
+
+<span th:include="layout/footer :: scripts" class="hidden"></span>
+
+</body>
+</html>
