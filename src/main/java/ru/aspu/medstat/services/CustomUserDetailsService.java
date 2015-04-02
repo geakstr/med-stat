@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(user);
     }
 
-    private static class CustomUserDetails implements UserDetails {
+    public static class CustomUserDetails implements UserDetails {
         private static final long serialVersionUID = -9192793385060344547L;
         
 		private User user;
@@ -46,6 +46,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         	}
         	
         	return authorities;
+        }
+        
+        public long getId() {
+        	return user.id;
         }
 
         @Override

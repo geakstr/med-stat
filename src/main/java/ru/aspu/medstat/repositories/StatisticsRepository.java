@@ -15,4 +15,7 @@ public interface StatisticsRepository extends CrudRepository<Statistic, Long> {
 
     @Query("SELECT s FROM Statistic s WHERE s.user.id = :user_id AND s.user.role = 1 ORDER BY s.date DESC")
     public List<Statistic> findAllUserStats(@Param("user_id") long user_id);
+    
+    @Query("SELECT s FROM Statistic s ORDER BY s.date DESC")
+    public List<Statistic> findAllStats();
 }
