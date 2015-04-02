@@ -21,7 +21,10 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.doctorId = -1 AND u.role = 1 ORDER BY u.registrationDate DESC")
     public List<User> findAllNewUsers();
-
+    
+    @Query("SELECT u FROM User u WHERE u.doctorId = :docId ORDER BY u.lastName, u.firstName")
+    public List<User> findAllPacientByDoctor(@Param("docId") Long docId);
+    
     @Query("SELECT u FROM User u WHERE u.role = 2")
     public List<User> findAllDoctors();
 }

@@ -3,9 +3,28 @@
 <head th:include="layout/header :: head (title='Личный кабинет доктора')"></head>
 <body>
 
-<h1>Личный кабинет доктора</h1>
+<h1>Список пациентов</h1>
 
 <hr/>
-
+	<div th:fragment="table">
+	
+	<table class="table-hover" style="width: 48%; float: left;">
+	    <thead>
+		    <tr>
+		        <th>ФИО</th>
+		        <th>Дата рождения</th>
+		        <th>Телефон</th>
+		    </tr>
+	    </thead>
+	    <tbody>
+		    <tr th:each="p:${doctorPacients}">
+		        <td th:text="${p.lastName} + ', ' + ${p.firstName}"></td>
+		        <td th:text="${p.birthDate}"></td>
+		        <td th:text="${p.phone}" style="width: 1px; text-align: right;"></td>
+		    </tr>
+	    </tbody>
+	</table>
+	
+	</div>
 </body>
 </html>

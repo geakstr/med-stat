@@ -39,45 +39,13 @@ public class CabinetController {
 	@RequestMapping("/")
     public String index(Model model, Principal principal) {
 		User user = userRepo.findByEmail(principal.getName());
-		
-		Gymnastic g1 = new Gymnastic();
-		Gymnastic g2 = new Gymnastic();
-		Gymnastic g3 = new Gymnastic();
-		
-		g1.title = "Gymnastic #1";
-		g2.title = "Gymnastic #2";
-		g3.title = "Gymnastic #3";
-		
-		gymRepo.save(g1);
-		gymRepo.save(g2);
-		gymRepo.save(g3);
-		
-		Statistic s1 = new Statistic();
-		Statistic s2 = new Statistic();
-		Statistic s3 = new Statistic();
-		
-		s1.percent = 100.0;
-		s1.setUser(user);
-		s1.setGymnastic(g1);
-		
-		s2.percent = 50.0;
-		s2.setUser(user);
-		s2.setGymnastic(g2);
-		
-		s3.percent = 0.0;
-		s3.setUser(user);
-		s3.setGymnastic(g3);
-		
-		statRepo.save(s1);
-		statRepo.save(s2);
-		statRepo.save(s3);
-				
+			
 		if (user.role == User.Roles.PATIENT.getValue()) {
 			return "redirect:user/";
 		} else if (user.role == User.Roles.DOCTOR.getValue()) {
 			return "redirect:doctor/";
 		}
-		return "index/index";
+		return "redirect:/";
 	}
 	
 	@RequestMapping("/user")
@@ -90,6 +58,8 @@ public class CabinetController {
 	
 	@RequestMapping("/doctor")
 	public String doctorIndex(Model model, Principal principal) {
+		User doctor = userRepo.findByEmail(principal.getName());
+		model.addAttribute("doctorPacients", userRepo.findAllPacientByDoctor(doctor.id));
 		return "cabinet/doctor/index";
 	}
 	
