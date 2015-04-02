@@ -14,10 +14,10 @@ public class Gymnastic {
     public String title;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "gymnastic")
-    public List<Statistic> statisticList;
+    public List<Statistic> statistics;
 
     public Gymnastic() {
-        this.statisticList = new ArrayList<>();
+        this.statistics = new ArrayList<>();
     }
 
     @Override

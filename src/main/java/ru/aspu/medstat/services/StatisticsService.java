@@ -19,4 +19,8 @@ public class StatisticsService {
     public List<Statistic> getAllUserStatsByGymnastic(final long userId, final long gymnasticId) {
         return repo.findAllUserStatsByGymnastic(userId, gymnasticId);
     }
+    
+    public List<Statistic> getAllStats() {
+    	return repo.findAllStats();
+    }
 }

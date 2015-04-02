@@ -59,11 +59,6 @@ public class User {
         this.statistics = new ArrayList<>();
     }
 
-    public void addStatistic(Statistic stat) {
-        this.statistics.add(stat);
-        stat.user = this;
-    }
-
     public static User create(String email, String password) {
         User user = new User();
         user.email = email;

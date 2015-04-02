@@ -12,10 +12,10 @@ public class Statistic {
     public long id;
 
     @ManyToOne
-    public Gymnastic gymnastic;
+    private Gymnastic gymnastic;
 
     @ManyToOne
-    public User user;
+    private User user;
 
     @Column(nullable = false)
     public double percent;
@@ -26,18 +26,31 @@ public class Statistic {
 
     public Statistic() {}
 
-    public void setGymnastic(Gymnastic gym) {
-        this.gymnastic = gym;
-    }
-
     @Override
     public String toString() {
         return String.format(
                 "Stat [id=%d, gymnastic_id=%s, user_id=%d, percent=%.2f, date=%s]",
                 this.id, this.gymnastic.title, this.user.id, this.percent, this.date);
     }
+    
+    
 
-    @Override
+    public Gymnastic getGymnastic() {
+		return gymnastic;
+	}
+	public void setGymnastic(Gymnastic gymnastic) {
+		gymnastic.statistics.add(this);
+		this.gymnastic = gymnastic;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		user.statistics.add(this);
+		this.user = user;
+	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
