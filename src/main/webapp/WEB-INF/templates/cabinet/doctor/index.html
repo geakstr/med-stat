@@ -21,6 +21,7 @@
 		        <td th:text="${p.lastName} + ', ' + ${p.firstName}"></td>
 		        <td th:text="${p.birthDate}"></td>
 		        <td th:text="${p.phone}" style="width: 1px; text-align: right;"></td>
+		        <td><a th:href="@{'/lk/doctor/users/'+${p.id}}">Статистика</a></td>
 		    </tr>
 	    </tbody>
 	</table>
