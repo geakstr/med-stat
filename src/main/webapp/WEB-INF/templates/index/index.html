@@ -10,11 +10,7 @@
 </div>
 
 <div sec:authorize="isAuthenticated()">
-  <span sec:authorize="hasRole('ROLE_ADMIN')">
-    <a href="/admin/">Панель администратора</a>
-  </span>
-
-  <span sec:authorize="!hasRole('ROLE_ADMIN')">
+  <span>
     <a href="/lk/">Личный кабинет</a>
   </span>
 

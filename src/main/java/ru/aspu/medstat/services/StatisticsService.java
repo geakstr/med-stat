@@ -23,4 +23,8 @@ public class StatisticsService {
     public List<Statistic> getAllStats() {
     	return repo.findAllStats();
     }
+    
+    public List<Statistic> getAllUsersStatsByDoctor(final long doctorId) {
+    	return repo.findAllUsersStatsByDoctor(doctorId);
+    }
 }
