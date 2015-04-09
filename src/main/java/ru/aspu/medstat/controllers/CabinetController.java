@@ -71,7 +71,7 @@ public class CabinetController {
         model.addAttribute("usersList", userRepo.findAllNewUsers());
         model.addAttribute("doctorsList", userRepo.findAllDoctors());
         
-		return "admin/index";
+		return "cabinet/admin/index";
 	}
 	
 	@RequestMapping("/user")
@@ -151,8 +151,9 @@ public class CabinetController {
 	}
 	
 	@RequestMapping(value = "/doctor/users/")
-	public String getStatsForAllUsers(Model model) {
-		model.addAttribute("userStats", statService.getAllStats());
+	public String getStatsForAllUsers(Model model, Principal principal) {
+		User doctor = userRepo.findByEmail(principal.getName());
+		model.addAttribute("userStats", statService.getAllUsersStatsByDoctor(doctor.id));
 		return "cabinet/user/index";
 	}
 	
