@@ -7,7 +7,12 @@
     <thead>
 	    <tr>
 	        <th>Имя</th>
-	        <th>Упражнение</th>
+	        <th>
+            <select id="gyms-select">
+              <option value="-1">Упражнения</option>
+              <option th:each="gym : ${userGyms}" th:text="${gym.title}" th:value="${gym.id}" th:selected="${gym.id} == ${gymId}"></option>
+            </select>
+          </th>
 	        <th>Прогресс</th>
 	        <th>Дата</th>
 	    </tr>
@@ -22,6 +27,24 @@
     </tbody>
 </table>
 
+</div>
+
+<div th:fragment="scripts">
+<script>
+$(document).ready(function() {
+  var $gymsSelect = $("#gyms-select");
+  $gymsSelect.change(function() {
+    var gymId = parseInt($(this).val());
+    if (gymId === -1) {
+        window.location.href = "http://localhost:8080/lk/user";
+    } else {
+        window.location.href = "http://localhost:8080/lk/user/gym/" + gymId;
+    }
+    return true;
+  });
+});
+
+</script>
 </div>
 </body>
 </html>

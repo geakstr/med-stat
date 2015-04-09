@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:include="layout/header :: head (title='Личный кабинет пользователя')"></head>
+<html xmlns:th="http://www.thymeleaf.org" th:with="title='Личный кабинет'">
+<head th:include="layout/header :: head (title=${title})"></head>
 <body>
 
-<h1>Статистика</h1>
+<div th:include="layout/header :: header (title=${title},titleLink=#{false})"></div>
 
-<hr/>
+<h2>Статистика</h2>
 
 <div th:include="tables/doctor-users-statistic-table :: table"></div>
+
+<span th:include="layout/footer :: scripts" class="hidden"></span>
+<span th:include="tables/doctor-users-statistic-table :: scripts" class="hidden"></span>
 
 </body>
 </html>

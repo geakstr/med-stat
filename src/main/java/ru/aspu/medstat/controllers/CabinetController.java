@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import ru.aspu.medstat.entities.Gymnastic;
 import ru.aspu.medstat.entities.Statistic;
 import ru.aspu.medstat.entities.User;
 import ru.aspu.medstat.forms.AdminDoctorRegistrationForm;
@@ -25,6 +26,7 @@ import ru.aspu.medstat.repositories.UserRepository;
 import ru.aspu.medstat.responses.ErrorResponse;
 import ru.aspu.medstat.responses.IResponse;
 import ru.aspu.medstat.responses.UserResponse;
+import ru.aspu.medstat.services.GymnasticService;
 import ru.aspu.medstat.services.MailService;
 import ru.aspu.medstat.services.StatisticsService;
 import ru.aspu.medstat.services.UsersService;
@@ -38,6 +40,9 @@ public class CabinetController {
 	
 	@Autowired
 	private StatisticsService statService;
+	
+	@Autowired
+	private GymnasticService gymService;
 	
 	@Autowired
 	private UserRepository userRepo;
@@ -77,7 +82,10 @@ public class CabinetController {
 	@RequestMapping("/user")
 	public String userIndex(Model model, Principal principal) {
 		User user = userRepo.findByEmail(principal.getName());
+		
 		model.addAttribute("userStats", statService.getAllUserStats(user.id));
+		model.addAttribute("userGyms", gymService.getAllUserGymnastics(user.id));
+		model.addAttribute("gymId", -1);
 		
 		return "cabinet/user/index";
 	}
@@ -129,6 +137,8 @@ public class CabinetController {
                 iter.remove();
             }
         }
+        
+        userRepo.save(user);
 
         return "redirect:/";
     }
@@ -139,6 +149,8 @@ public class CabinetController {
 		User user = userRepo.findByEmail(principal.getName());
 		List<Statistic> userStats = statService.getAllUserStatsByGymnastic(user.id, gymId);
 		model.addAttribute("userStats", userStats);
+		model.addAttribute("userGyms", gymService.getAllUserGymnastics(user.id));
+		model.addAttribute("gymId", gymId);
 		return "cabinet/user/index";
 	}
 	
