@@ -77,7 +77,7 @@ public class CabinetController {
 	@RequestMapping("/user")
 	public String userIndex(Model model, Principal principal) {
 		User user = userRepo.findByEmail(principal.getName());
-		model.addAttribute("userStats", statService.getAllUserStats(user.id));
+		model.addAttribute("userStats", statService.getAllActualUserStats(user.id));
 		
 		return "cabinet/user/index";
 	}
@@ -137,7 +137,7 @@ public class CabinetController {
 	public String getStatsByUserGym(final @PathVariable Long gymId,
 									Model model, Principal principal) {
 		User user = userRepo.findByEmail(principal.getName());
-		List<Statistic> userStats = statService.getAllUserStatsByGymnastic(user.id, gymId);
+		List<Statistic> userStats = statService.getAllActualUserStatsByGymnastic(user.id, gymId);
 		model.addAttribute("userStats", userStats);
 		return "cabinet/user/index";
 	}
@@ -146,14 +146,14 @@ public class CabinetController {
 	public String getStatsByUser(final @PathVariable Long userId,
 								 Model model) {
 		User user = userRepo.findOne(userId);
-		model.addAttribute("userStats", statService.getAllUserStats(user.id));
+		model.addAttribute("userStats", statService.getAllActualUserStats(user.id));
 		return "cabinet/user/index";
 	}
 	
 	@RequestMapping(value = "/doctor/users/")
 	public String getStatsForAllUsers(Model model, Principal principal) {
 		User doctor = userRepo.findByEmail(principal.getName());
-		model.addAttribute("userStats", statService.getAllUsersStatsByDoctor(doctor.id));
+		model.addAttribute("userStats", statService.getAllActualUsersStatsByDoctor(doctor.id));
 		return "cabinet/user/index";
 	}
 	
@@ -161,7 +161,7 @@ public class CabinetController {
 	public String getStatsByUserAndGym(final @PathVariable Long userId,
 									   final @PathVariable Long gymId,
 									   Model model) {
-		model.addAttribute("userStats", statService.getAllUserStatsByGymnastic(userId, gymId));
+		model.addAttribute("userStats", statService.getAllActualUserStatsByGymnastic(userId, gymId));
 		return "cabinet/user/index";
 	}
 }
