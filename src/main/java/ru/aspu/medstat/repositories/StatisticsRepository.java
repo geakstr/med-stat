@@ -10,15 +10,32 @@ import java.util.List;
 
 @Repository
 public interface StatisticsRepository extends CrudRepository<Statistic, Long> {
-    @Query("SELECT s FROM Statistic s WHERE s.gymnastic.id = :gymnastic_id AND s.user.id = :user_id AND s.user.role = 1")
-    public List<Statistic> findAllUserStatsByGymnastic(@Param("user_id") long user_id, @Param("gymnastic_id") long gymnastic_id);
+	@Query("SELECT s FROM Statistic s, UserGym ug "
+			+ "WHERE s.userGym.id = ug.id "
+			+ "AND ug.user.id = :user_id "
+			+ "AND ug.gymnastic.id = :gymnastic_id "
+			+ "AND ug.complete = 0 "
+			+ "ORDER BY s.date DESC")
+    public List<Statistic> findAllActualUserStatsByGymnastic(@Param("user_id") long user_id, @Param("gymnastic_id") long gymnastic_id);
 
-    @Query("SELECT s FROM Statistic s WHERE s.user.id = :user_id AND s.user.role = 1 ORDER BY s.date DESC")
-    public List<Statistic> findAllUserStats(@Param("user_id") long user_id);
+	@Query("SELECT s FROM Statistic s, UserGym ug "
+			+ "WHERE s.userGym.id = ug.id "
+			+ "AND ug.user.id = :user_id "
+			+ "AND ug.complete = 0 "
+			+ "ORDER BY s.date DESC")
+    public List<Statistic> findAllActualUserStats(@Param("user_id") long user_id);
     
-    @Query("SELECT s FROM Statistic s ORDER BY s.date DESC")
-    public List<Statistic> findAllStats();
+    @Query("SELECT s FROM Statistic s, UserGym ug "
+    		+ "WHERE s.userGym.id = ug.id "
+    		+ "AND ug.complete = 0 "
+    		+ "ORDER BY s.date DESC")
+    public List<Statistic> findAllActualStats();
     
-    @Query("SELECT s FROM Statistic s, User u WHERE s.user.id = u.id AND u.doctorId = :doctor_id ORDER BY s.date DESC")
-    public List<Statistic> findAllUsersStatsByDoctor(@Param("doctor_id") long doctor_id);
+    @Query("SELECT s FROM Statistic s, UserGym ug, User u "
+    		+ "WHERE s.userGym.id = ug.id "
+    		+ "AND ug.user.id = u.id "
+    		+ "AND ug.complete = 0 "
+    		+ "AND u.doctorId = :doctor_id "
+    		+ "ORDER BY s.date DESC")
+    public List<Statistic> findAllActualUsersStatsByDoctor(@Param("doctor_id") long doctor_id);
 }

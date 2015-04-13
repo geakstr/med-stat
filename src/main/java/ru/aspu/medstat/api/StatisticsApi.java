@@ -21,12 +21,12 @@ public class StatisticsApi {
 
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
     public List<Statistic> getUserById(final @PathVariable Long userId) {
-        return statService.getAllUserStats(userId);
+        return statService.getAllActualUserStats(userId);
     }
 
     @RequestMapping(value = "/user/{userId}/{gymnasticId}", method = RequestMethod.GET)
     public List<Statistic> getUserById(final @PathVariable Long userId,
                                        final @PathVariable Long gymnasticId) {
-        return statService.getAllUserStatsByGymnastic(userId, gymnasticId);
+        return statService.getAllActualUserStatsByGymnastic(userId, gymnasticId);
     }
 }

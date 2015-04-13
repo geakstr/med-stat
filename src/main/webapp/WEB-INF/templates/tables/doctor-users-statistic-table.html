@@ -19,8 +19,8 @@
     </thead>
     <tbody>
 	    <tr th:each="s:${userStats}">
-	        <td th:text="${s.user.lastName} + ', ' + ${s.user.firstName}"></td>
-	        <td th:text="${s.gymnastic.title}"></td>
+	        <td th:text="${s.userGym.user.lastName} + ', ' + ${s.userGym.user.firstName}"></td>
+	        <td th:text="${s.userGym.gymnastic.title}"></td>
 	        <td th:text="${s.percent}" style="width: 1px; text-align: right;"></td>
 	        <td th:text="${#dates.format(s.date, 'dd/MM/yyyy')}" style="width: 1px;"></td>
 	    </tr>

@@ -11,6 +11,9 @@ import ru.aspu.medstat.entities.Gymnastic;
 
 @Repository
 public interface GymnasticRepository extends CrudRepository<Gymnastic, Long> {
-	@Query("SELECT DISTINCT g FROM Gymnastic g, Statistic s WHERE s.user.id = :user_id")
-    public List<Gymnastic> findAllUserGymnastics(@Param("user_id") long user_id);
+	@Query("SELECT g FROM Gymnastic g, UserGym ug "
+			+ "WHERE ug.gymnastic.id = g.id "
+			+ "AND ug.user.id = :user_id "
+			+ "AND ug.complete = 0")
+	public List<Gymnastic> findAllUserGyms(@Param("user_id") long user_id);
 }

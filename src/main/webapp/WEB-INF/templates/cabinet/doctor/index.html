@@ -3,29 +3,96 @@
 <head th:include="layout/header :: head (title='Личный кабинет доктора')"></head>
 <body>
 
+<style>
+.users-gyms tr {
+	cursor: pointer;
+}
+</style>
+
 <h1>Список пациентов</h1>
 
 <hr/>
 	<div th:fragment="table">
-	
-	<table class="table-hover" style="width: 48%; float: left;">
-	    <thead>
-		    <tr>
-		        <th>ФИО</th>
-		        <th>Дата рождения</th>
-		        <th>Телефон</th>
-		    </tr>
-	    </thead>
-	    <tbody>
-		    <tr th:each="p:${doctorPacients}">
-		        <td th:text="${p.lastName} + ', ' + ${p.firstName}"></td>
-		        <td th:text="${p.birthDate}"></td>
-		        <td th:text="${p.phone}" style="width: 1px; text-align: right;"></td>
-		        <td><a th:href="@{'/lk/doctor/users/'+${p.id}}">Статистика</a></td>
-		    </tr>
-	    </tbody>
-	</table>
-	
+		<table class="users-gyms table-hover" style="width: 100%; float: left;">
+		    <thead>
+			    <tr>
+			        <th style="width: 25%;">ФИО</th>
+			        <th style="width: 25%;">Дата рождения</th>
+			        <th style="width: 25%;">Телефон</th>
+			        <th style="width: 25%;">Статистика</th>
+			    </tr>
+		    </thead>
+		    <tbody>
+			    <tr class="user-row" th:each="p:${doctorPacients}">
+			    	<td colspan="4">
+			    		<table style="width: 100%;">
+			    			<tr>
+						        <td style="width: 25%;" th:text="${p.lastName} + ', ' + ${p.firstName}"></td>
+						        <td style="width: 25%;" th:text="${p.birthDate}"></td>
+						        <td style="width: 25%; text-align: right;" th:text="${p.phone}"></td>
+						        <td style="width: 25%;"><a th:href="@{'/lk/doctor/users/'+${p.id}}">Статистика</a></td>
+				        	</tr>
+				        	<tr>
+					        	<td colspan="4" class="user-row-gyms" style="display: none">
+						        	<ul>
+						        		<li th:each="ug:${p.userGyms}" th:if="${ug.complete != 1}">
+						        			<form class="user-gym-delete-form" th:action="@{/lk/doctor/gyms/remove}" th:object="${DoctorRemoveGymFromUserForm}" method="post" autocomplete="off">
+						        				<label th:text="${ug.gymnastic.title}"></label>
+						        				<input type="hidden" name="userGymId" th:value="${ug.id}"/>
+						        				<input type="submit" value="Х"/>
+						        			</form>
+						        		</li>
+						        		<li>
+						        			<form class="user-gym-add-form" th:action="@{/lk/doctor/gyms/add}" th:object="${DoctorAddGymToPacient}" method="post" autocomplete="off">
+						        				<select class="selectNewGym" th:field="*{gymId}">
+							                        <option th:each="g:${gymsList}" th:value="${g.id}" th:text="${g.title}"/>
+							                    </select>
+							                    <input type="hidden" name="userId" th:value="${p.id}"/>
+						        				<input type="submit" value="Добавить"/>
+						        			</form>
+						        		</li>
+						        	</ul>
+						        </td>
+				        	</tr>
+				        </table>
+					</td>
+			    </tr>
+		    </tbody>
+		</table>
 	</div>
+	<span th:include="layout/footer :: scripts" class="hidden"></span>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			var $userGymDeleteForm = $('.user-gym-delete-form');
+			var $userGymAddForm = $('.user-gym-add-form');
+			
+			$userGymDeleteForm.submit(function (event) {
+        		event.preventDefault();
+        		var $this = $(this);
+        		$this.parents('.user-row-gyms').show();
+        		submitForm($this, 10000, function (response) {
+		            if (response.type === "success") {
+		                $this.parent('li').remove();
+		            }
+		        });
+        		return false;
+        	});
+        	
+        	$userGymAddForm.submit(function(event) {
+        		event.preventDefault();
+        		var $this = $(this);
+        		submitForm($this, 10000, function (response) {
+        			if (response.type === "success") {
+        				$this.parent('li').append('<li>'+$('selectNewGym option:selected').text()+'</li>');
+        			}
+        		});
+        		return false;
+        	});
+			
+			$('.user-row').on('click', function() {
+				$(this).find('.user-row-gyms').toggle();
+			});
+		});
+	</script>
 </body>
 </html>
