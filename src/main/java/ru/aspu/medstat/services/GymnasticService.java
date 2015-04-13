@@ -14,6 +14,6 @@ public class GymnasticService {
 	private GymnasticRepository repo;
 	 
 	public List<Gymnastic> getAllUserGymnastics(final long userId) {
-		return repo.findAllUserGymnastics(userId);
+		return repo.findAllUserGyms(userId);
 	}
 }

@@ -4,8 +4,19 @@
 <body>
 
 <style>
-.users-gyms tr {
+.user-row-expand {
 	cursor: pointer;
+}
+.user-row-gyms ul, .user-row-gyms li {
+	margin: 0;
+	padding: 0;
+}
+.user-row-gyms li {
+	list-style: none outside;
+	margin-bottom: 11px;
+}
+.user-row-gyms li:last-child {
+	margin-bottom: 0;
 }
 </style>
 
@@ -16,6 +27,7 @@
 		<table class="users-gyms table-hover" style="width: 100%; float: left;">
 		    <thead>
 			    <tr>
+					<th style="width: 1px;"></th>
 			        <th style="width: 25%;">ФИО</th>
 			        <th style="width: 25%;">Дата рождения</th>
 			        <th style="width: 25%;">Телефон</th>
@@ -23,7 +35,8 @@
 			    </tr>
 		    </thead>
 		    <tbody>
-			    <tr class="user-row" th:each="p:${doctorPacients}">
+			    <tr th:each="p:${doctorPacients}">
+					<td style="width: 1px; text-align: center;" class="user-row-expand">↓</td>
 			    	<td colspan="4">
 			    		<table style="width: 100%;">
 			    			<tr>
@@ -39,7 +52,7 @@
 						        			<form class="user-gym-delete-form" th:action="@{/lk/doctor/gyms/remove}" th:object="${DoctorRemoveGymFromUserForm}" method="post" autocomplete="off">
 						        				<label th:text="${ug.gymnastic.title}"></label>
 						        				<input type="hidden" name="userGymId" th:value="${ug.id}"/>
-						        				<input type="submit" value="Х"/>
+						        				<input type="submit" class="btn btn-warning btn-xs" value="×"/>
 						        			</form>
 						        		</li>
 						        		<li>
@@ -48,7 +61,7 @@
 							                        <option th:each="g:${gymsList}" th:value="${g.id}" th:text="${g.title}"/>
 							                    </select>
 							                    <input type="hidden" name="userId" th:value="${p.id}"/>
-						        				<input type="submit" value="Добавить"/>
+						        				<input type="submit" class="btn btn-success btn-xs" value="Добавить"/>
 						        			</form>
 						        		</li>
 						        	</ul>
@@ -83,14 +96,15 @@
         		var $this = $(this);
         		submitForm($this, 10000, function (response) {
         			if (response.type === "success") {
-        				$this.parent('li').append('<li>'+$('selectNewGym option:selected').text()+'</li>');
+						var selectText = $this.find('.selectNewGym option:selected').text();
+        				$('<li><b>' + selectText + '</b></li>').insertBefore($this.parent('li'));
         			}
         		});
         		return false;
         	});
 			
-			$('.user-row').on('click', function() {
-				$(this).find('.user-row-gyms').toggle();
+			$('.user-row-expand').on('click', function() {
+				$(this).parent('tr').find('.user-row-gyms').toggle();
 			});
 		});
 	</script>
