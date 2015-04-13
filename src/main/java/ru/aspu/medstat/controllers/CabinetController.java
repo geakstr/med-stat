@@ -19,11 +19,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ru.aspu.medstat.entities.Statistic;
 import ru.aspu.medstat.entities.User;
+import ru.aspu.medstat.entities.UserGym;
 import ru.aspu.medstat.forms.AdminDoctorRegistrationForm;
 import ru.aspu.medstat.forms.AdminSetDoctorToPacientForm;
+import ru.aspu.medstat.forms.DoctorAddGymToPacient;
+import ru.aspu.medstat.forms.DoctorRemoveGymFromUserForm;
+import ru.aspu.medstat.repositories.GymnasticRepository;
 import ru.aspu.medstat.repositories.UserRepository;
+import ru.aspu.medstat.repositories.UsersGymsRepository;
 import ru.aspu.medstat.responses.ErrorResponse;
 import ru.aspu.medstat.responses.IResponse;
+import ru.aspu.medstat.responses.SuccessResponse;
 import ru.aspu.medstat.responses.UserResponse;
 import ru.aspu.medstat.services.MailService;
 import ru.aspu.medstat.services.StatisticsService;
@@ -38,15 +44,16 @@ public class CabinetController {
 	
 	@Autowired
 	private StatisticsService statService;
-	
-	@Autowired
-	private UserRepository userRepo;
-	
     @Autowired
     private UsersService usersService;
-    
     @Autowired
     private MailService mail;
+	@Autowired
+	private UserRepository userRepo;
+	@Autowired
+	private UsersGymsRepository userGymRepo;
+	@Autowired
+	private GymnasticRepository gymRepo;
 	
 	@RequestMapping("/")
     public String index(Model model, Principal principal) {
@@ -85,7 +92,12 @@ public class CabinetController {
 	@RequestMapping("/doctor")
 	public String doctorIndex(Model model, Principal principal) {
 		User doctor = userRepo.findByEmail(principal.getName());
+
 		model.addAttribute("doctorPacients", userRepo.findAllPacientByDoctor(doctor.id));
+		model.addAttribute("gymsList", gymRepo.findAll());
+		model.addAttribute("DoctorRemoveGymFromUserForm", new DoctorRemoveGymFromUserForm());
+		model.addAttribute("DoctorAddGymToPacient", new DoctorAddGymToPacient());
+		
 		return "cabinet/doctor/index";
 	}
 	
@@ -163,5 +175,26 @@ public class CabinetController {
 									   Model model) {
 		model.addAttribute("userStats", statService.getAllActualUserStatsByGymnastic(userId, gymId));
 		return "cabinet/user/index";
+	}
+	
+	@RequestMapping(value = "/doctor/gyms/remove", method = RequestMethod.POST, 
+					consumes = MediaType.APPLICATION_JSON_VALUE, 
+					produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+	public IResponse removeGymFromUser(@RequestBody DoctorRemoveGymFromUserForm form) {
+		userGymRepo.delete(form.getUserGymId());
+		return new SuccessResponse();
+	}
+	
+	@RequestMapping(value = "/doctor/gyms/add", method = RequestMethod.POST, 
+					consumes = MediaType.APPLICATION_JSON_VALUE, 
+					produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+	public IResponse addGymToUser(@RequestBody DoctorAddGymToPacient form) {
+		UserGym ug = new UserGym();
+		ug.setUser(userRepo.findOne(form.getUserId()));
+		ug.setGymnastic(gymRepo.findOne(form.getGymId()));
+		userGymRepo.save(ug);
+		return new SuccessResponse();
 	}
 }

@@ -53,10 +53,10 @@ public class User {
     public Date registrationDate = new Date();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    public List<UserGym> usersGyms;
+    public List<UserGym> userGyms;
 
     public User() {
-        this.usersGyms = new ArrayList<>();
+        this.userGyms = new ArrayList<>();
     }
 
     public static User create(String email, String password) {
