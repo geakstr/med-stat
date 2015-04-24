@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:with="title='Личные сообщения'">
+<head th:include="layout/header :: head (title=${title})">
+</head>
+<body>
+<style>
+	#menu { 
+	  float: left;
+	  width: 20%; 
+	}
+	#content { 
+	  margin-left: 20%;
+	  width: 60%; 
+	}
+	.isRead {
+		font-weight: normal;
+	}
+	.notRead {
+		font-weight: 700;
+	}
+	table {
+		min-width: 600px;
+	}
+	td, th {
+    	padding: 5px; 
+    }
+	th {
+		background-color: whitesmoke;
+	}
+	tbody tr {
+		border-bottom: 1px solid lightgrey;
+	}
+	.new-message {
+		padding: 5px; 
+		display: none;
+	}
+	.new-message form input {
+		margin-bottom: 3px;
+	}
+	textarea {
+		max-width: 100%;
+	}
+	.submit-message {
+		float: right;
+	}
+	.message-create-form-validation-error {
+		color: red;
+	}
+</style>
+<div th:include="layout/header :: header (title=${title},titleLink=#{false})"></div>
+
+	<div id="menu">
+		<span><a href="/messages/new">Новые</a></span><br/>
+		<span><a href="/messages/posted">Отправленные</a></span><br/>
+		<span><a href="/lk/">Назад</a></span>
+	</div>
+	<div id="content">
+		<button id="new-message-button" type="button" class="btn btn-default btn-xs" style="margin-bottom: 10px;">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 
+			Новое сообщение
+		</button>
+		<div class="new-message">
+			<div class="dropdown" style="margin-bottom: 3px;">
+			  <button id="dropdownMenu1" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+			    Кому
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			    <li role="presentation" th:each="u:${toUsersList}">
+			    	<a role="menuitem" tabindex="-1" href="#" th:text="${u.lastName} + ', ' + ${u.firstName}"></a>
+			    	<input id="user-id" type="hidden" th:value="${u.id}"/>
+			    </li>
+			  </ul>
+			  <input id="message-to-user-name" disabled="disabled" style="width:86%;"/>
+			</div>
+			<form class="user-create-message-form" th:action="@{/messages/create}" th:object="${UserCreateMessageForm}" method="post" autocomplete="off">
+				<input id="message-to-user" type="hidden" th:field="*{toUserId}"/>
+				<input id="message-header" style="width:100%;" type="text" name="header" th:field="*{header}" placeholder="Заголовок"/>
+				<textarea id="message-text" style="width:100%; height:100px;" name="message" th:field="*{message}" placeholder="Сообщение"></textarea><br/>
+				<input id="message-create-submit" class="btn btn-default btn-sm submit-message" type="submit"/>
+			</form>
+			<button id="message-clear-btn" class="btn btn-default btn-sm">Очистить</button>
+			<span class="message-create-form-validation-error"></span>
+		</div>
+		<table class="table-hover">
+			<thead>
+			    <tr>
+			        <th style="width: 30%;">Отправитель</th>
+			        <th style="width: 60%;">Тема сообщения</th>
+			        <th style="width: 10%;">Дата</th>
+			        <th style="width: 1px;"></th>
+			    </tr>
+		    </thead>
+		    <tbody class="messages-table-body">
+		    	<tr th:each="m:${messages}" th:attr="class=${m.isRead == 1 ? 'isRead' : 'notRead'}">
+		    		<form class="user-delete-message-form" th:action="@{/messages/delete}" th:object="${UserRemoveMessageForm}" method="post" autocomplete="off">
+				    	<td style="width: 33%;" th:text="${m.fromUser.lastName} + ', ' + ${m.fromUser.firstName}"></td>
+				    	<td style="width: 33%;" th:text="${m.header}"></td>
+				    	<td style="width: 33%;" th:text="${#dates.format(m.date, 'dd/MM/yyyy')}"></td>
+				    	<input type="hidden" name="messageId" th:value="${m.id}"/>
+				    	<td><input type="submit" class="btn btn-warning btn-xs" value="x"/></td>
+				    </form>
+			    </tr>
+		    </tbody>
+		</table>
+	</div>
+	<span th:include="layout/footer :: scripts" class="hidden"></span>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			var $userDeleteMessageForm = $('.user-delete-message-form');
+			
+			var $messageToUser = $('#message-to-user');
+			var $messageTextArea = $('#message-text');
+			var $messageCreateSubmit = $('#message-create-submit');
+			var $messageCreateFormValidationError = $('.message-create-form-validation-error');
+			
+			var url = document.createElement('a');
+			url.href = document.URL;
+			
+			var route = url.pathname.split('/').filter(function(x) {
+				return x !== '';
+			});
+			
+			if (route[1] === "posted") {
+				$('.messages-table-body tr').each(function() {
+					this.className = 'isRead';
+				});
+			}
+			
+			validateCreateMessageForm();
+			$messageCreateFormValidationError.hide();
+			
+			$userDeleteMessageForm.submit(function(event) {
+				event.preventDefault();
+				var $this = $(this);
+				var to_user = $("#message-to-user").val().trim();
+				submitForm($this, 10000, function(response) {
+					if (response.type === "success") {
+						$this.parent('tr').remove();
+					}
+				});
+				return false;
+			});
+			
+			$messageTextArea.on('input change', function(event) {
+				validateCreateMessageForm();
+			});
+			
+			$(".dropdown-menu li").click(function() {
+				$("#message-to-user").val($(this).children("#user-id").val());
+			});
+			$(".dropdown-menu li a").click(function(){
+		    	$("#message-to-user-name").val($(this).text());
+			});
+			
+			$("#message-clear-btn").click(function() {
+				$("#message-header").val('');
+				$("#message-text").val('');
+			});
+			
+			$('#new-message-button').on('click', function() {
+				$('.new-message').slideToggle();
+			});
+			
+			function validateCreateMessageForm() {
+				var disabled = false;
+				var errorText = "";
+				
+				if ($messageToUser.val() == -1) {
+					disabled = true;
+					errorText = "Выберите собеседника. "
+				}
+				if ($messageTextArea.val().trim().length === 0) {
+					disabled = true;
+					errorText = "Текст сообщения не может быть пустым."
+				}
+				
+				$messageCreateSubmit.attr('disabled', disabled);
+				$messageCreateFormValidationError.text(errorText);
+				$messageCreateFormValidationError.show();
+			};
+		});
+	</script>
+</body>
+</html>

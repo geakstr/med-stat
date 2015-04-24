@@ -14,49 +14,42 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-
     @Column(name = "email", unique = true, nullable = false)
     public String email;
-
     @Column(name = "first_name", nullable = true)
     public String firstName;
-
     @Column(name = "last_name", nullable = true)
     public String lastName;
-
     @Column(name = "birth_date", nullable = true)
     public String birthDate;
-
     @Column(name = "password", nullable = true)
     public String password;
-
     @Column(name = "role", nullable = false)
     public int role = User.Roles.PATIENT.getValue();
-
     @Column(name = "phone", nullable = true)
     public String phone;
-
     @Column(name = "email_token", nullable = false)
     public String emailToken;
-
     @Column(name = "email_approved", nullable = false)
     public boolean emailApproved = false;
-
     @Column(name = "was_login", nullable = false)
     public boolean wasLogin = false;
-
     @Column(nullable = false)
     public long doctorId = -1;
-
     @Column(name = "reg_date", nullable = false)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     public Date registrationDate = new Date();
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     public List<UserGym> userGyms;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fromUser")
+    public List<Message> messagesFrom;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "toUser")
+    public List<Message> messagesTo;
 
     public User() {
         this.userGyms = new ArrayList<>();
+        this.messagesFrom = new ArrayList<>();
+        this.messagesTo = new ArrayList<>();
     }
 
     public static User create(String email, String password) {
