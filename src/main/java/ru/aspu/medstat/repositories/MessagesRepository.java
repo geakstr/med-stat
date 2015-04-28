@@ -22,4 +22,10 @@ public interface MessagesRepository extends CrudRepository<Message, Long> {
 			+ "AND m.deleteTo = 0 "
 			+ "ORDER BY m.date DESC")
 	public List<Message> findAllByToUser(@Param("to_id") long to_id);
+	
+	@Query("SELECT COUNT(m) FROM Message m "
+			+ "WHERE m.toUser.id = :to_id "
+			+ "AND m.isRead = 0 " 
+			+ "AND m.deleteTo = 0")
+	public int countUnreadUserMessages(@Param("to_id") long to_id);
 }

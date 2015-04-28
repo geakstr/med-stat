@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:with="title='Подробности'">
+<head th:include="layout/header :: head (title=${title})">
+</head>
+<body>
+<span th:include="forms/create-message :: create-message-form-styles" class="hidden"></span>
+<style>
+	#content {
+		min-width: 600px;
+	}
+	.message-meta {
+		width: 100%;
+	}
+	.message-header {
+		font-weight: 700;
+	}
+	.message-header h3 {
+		padding: 0 0 11px 0;
+		margin: 0;
+	}
+	.new-message {
+		display: none;
+		width: 60%; 
+	}
+</style>
+	<div th:include="layout/header :: header (title=${title},titleLink=#{false})"></div>
+	<div id="content">
+		<a th:href="@{/messages/}">Назад</a>
+		<button id="new-message-button" type="button" class="btn btn-default btn-xs" style="margin-bottom: 10px;">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 
+			Ответить
+		</button>
+		<div class="new-message" th:include="forms/create-message :: create-message-form (${message.fromUser.id})"></div>
+		<div class="message-meta">
+			<div class="message-from">
+				<label>От:</label>
+				<span th:text="${message.fromUser.lastName} + ', ' + ${message.fromUser.firstName}"></span>
+				(<span th:text="${#dates.format(message.date, 'dd/MM/yyyy HH:mm:ss')}"></span>)
+			</div>
+		</div>
+		<div style="clear: both; height: 0; margin: 0; padding: 0;"></div>
+		<div class="message-header">
+			<h3 th:text="${message.header}"></h3>
+		</div>
+		<div class="message-body">
+			<p th:text="${message.message}"></p>
+		</div>
+	</div>
+	<span th:include="layout/footer :: scripts" class="hidden"></span>
+	<span th:include="forms/create-message :: create-message-form-js"></span>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			$("#new-message-button").on('click', function() {
+				$('.new-message').slideToggle();
+			}); 
+		});
+	</script>
+</body>
+</html>

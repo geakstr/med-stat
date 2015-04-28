@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,13 +41,14 @@ public class MessagingController {
 	public Model setModelAttributes(User user, Model model, Principal principal) {
 		model.addAttribute("UserRemoveMessageForm", new UserRemoveMessageForm());
 		model.addAttribute("UserCreateMessageForm", new UserCreateMessageForm());
-		List<User> toUsersList = new ArrayList<>();
+		List<User> usersAddresses = new ArrayList<>();
 		if (user.role == User.Roles.DOCTOR.getValue()) {
-			toUsersList = userRepo.findAllPacientByDoctor(user.id);
+			usersAddresses = userRepo.findAllPacientByDoctor(user.id);
 		} else if (user.role == User.Roles.PATIENT.getValue()) {
-			toUsersList.add(userRepo.findOne(user.doctorId));
+			usersAddresses.add(userRepo.findOne(user.doctorId));
 		}
-		model.addAttribute("toUsersList", toUsersList);
+		model.addAttribute("toUsersList", usersAddresses);
+		model.addAttribute("unreadMessagesCount", messageRepo.countUnreadUserMessages(user.id));
 		return model;
 	}
 
@@ -74,26 +76,45 @@ public class MessagingController {
 								   Principal principal) {
 		User user = userRepo.findByEmail(principal.getName());
 		Message message = messageRepo.findOne(form.getMessageId());
-		if (message.fromUser.equals(user)) {
+		
+		if (message == null) {
+			return new ErrorResponse("Message delete processing faild: access denied");
+		}
+		
+		boolean messageInFrom = message.fromUser.equals(user);
+		boolean messageInTo = message.toUser.equals(user);
+		
+		if (messageInFrom) {
 			message.deleteFrom = 1;
 		}
-		if (message.toUser.equals(user)) {
+		if (messageInTo) {
 			message.deleteTo = 1;
 		}
-		if (message.deleteFrom == 1 && message.deleteTo == 1) {
-			messageRepo.delete(message);
-		} else {
-			messageRepo.save(message);
+		if (!messageInTo && !messageInFrom) {
+			return new ErrorResponse("Message delete processing faild: access denied");
 		}
+		messageRepo.save(message);
 		return new SuccessResponse();
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String createMessage(final HttpServletRequest request, 
-								   @ModelAttribute UserCreateMessageForm form,
-								   Principal principal) {
+								@ModelAttribute UserCreateMessageForm form,
+								Principal principal) {
 		User user = userRepo.findByEmail(principal.getName());
-		if (form.getToUserId() > 0 && !("".equals(form.getMessage()))) {
+		
+		if (user.role == User.Roles.PATIENT.getValue()) {
+			if (form.getToUserId() != user.doctorId) {
+				return "messages/errors/brokenUserIdFound";
+			}
+		} else if (user.role == User.Roles.DOCTOR.getValue()) {
+			User pacient = userRepo.findOne(form.getToUserId());
+			if (pacient == null || pacient.doctorId != user.id) {
+				return "messages/errors/brokenUserIdFound";
+			}
+		}
+		
+		if (!"".equals(form.getMessage())) {
 			Message message = new Message();
 			message.fromUser = user;
 			message.toUser = userRepo.findOne(form.getToUserId());
@@ -101,7 +122,34 @@ public class MessagingController {
 			message.message = form.getMessage();
 			messageRepo.save(message);
 		}
+
 		String referer = request.getHeader("referer");
 		return "redirect:"+referer;
+	}
+	
+	@RequestMapping(value = "/view/{messageId}", method = RequestMethod.GET)
+	public String viewMessage(final HttpServletRequest request,
+							  final @PathVariable Long messageId,
+							  Model model, Principal principal) {
+		User user = userRepo.findByEmail(principal.getName());
+		Message message = messageRepo.findOne(messageId);
+		
+		if (message == null) {
+			return "messages/errors/brokenMessageIdFound";
+		}
+		
+		boolean isFrom = message.fromUser.equals(user);
+		boolean isTo = message.toUser.equals(user);
+		
+		if (!isFrom && !isTo) {
+			return "messages/errors/brokenMessageIdFound";
+		}
+		if (isTo && message.isRead != 1) {
+			message.isRead = 1;
+			messageRepo.save(message);
+		}
+		model.addAttribute("UserCreateMessageForm", new UserCreateMessageForm());
+		model.addAttribute("message", message);
+		return "messages/details";
 	}
 }

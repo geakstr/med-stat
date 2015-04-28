@@ -3,6 +3,7 @@
 <head th:include="layout/header :: head (title=${title})">
 </head>
 <body>
+<span th:include="forms/create-message :: create-message-form-styles" class="hidden"></span>
 <style>
 	#menu { 
 	  float: left;
@@ -28,29 +29,24 @@
 		background-color: whitesmoke;
 	}
 	tbody tr {
+		cursor: pointer;
 		border-bottom: 1px solid lightgrey;
 	}
-	.new-message {
-		padding: 5px; 
+	.message-delete-error {
 		display: none;
-	}
-	.new-message form input {
-		margin-bottom: 3px;
-	}
-	textarea {
-		max-width: 100%;
-	}
-	.submit-message {
-		float: right;
-	}
-	.message-create-form-validation-error {
 		color: red;
+		margin-left: 3px;
+		font-weight: 700;
 	}
 </style>
-<div th:include="layout/header :: header (title=${title},titleLink=#{false})"></div>
-
+	<div th:include="layout/header :: header (title=${title},titleLink=#{false})"></div>
 	<div id="menu">
-		<span><a href="/messages/new">Новые</a></span><br/>
+		<span>
+			<a href="/messages/new">Новые</a>
+		</span>
+		<span th:if="${unreadMessagesCount > 0}">
+			<strong class="unread-messages-count" th:text="'('+${unreadMessagesCount}+')'"></strong>
+		</span><br/>
 		<span><a href="/messages/posted">Отправленные</a></span><br/>
 		<span><a href="/lk/">Назад</a></span>
 	</div>
@@ -73,15 +69,9 @@
 			  </ul>
 			  <input id="message-to-user-name" disabled="disabled" style="width:86%;"/>
 			</div>
-			<form class="user-create-message-form" th:action="@{/messages/create}" th:object="${UserCreateMessageForm}" method="post" autocomplete="off">
-				<input id="message-to-user" type="hidden" th:field="*{toUserId}"/>
-				<input id="message-header" style="width:100%;" type="text" name="header" th:field="*{header}" placeholder="Заголовок"/>
-				<textarea id="message-text" style="width:100%; height:100px;" name="message" th:field="*{message}" placeholder="Сообщение"></textarea><br/>
-				<input id="message-create-submit" class="btn btn-default btn-sm submit-message" type="submit"/>
-			</form>
-			<button id="message-clear-btn" class="btn btn-default btn-sm">Очистить</button>
-			<span class="message-create-form-validation-error"></span>
+			<div th:include="forms/create-message :: create-message-form (${0})"></div>
 		</div>
+		<span class="message-delete-error"></span>
 		<table class="table-hover">
 			<thead>
 			    <tr>
@@ -89,30 +79,28 @@
 			        <th style="width: 60%;">Тема сообщения</th>
 			        <th style="width: 10%;">Дата</th>
 			        <th style="width: 1px;"></th>
+			        <th style="display: none;"></th>
 			    </tr>
 		    </thead>
 		    <tbody class="messages-table-body">
 		    	<tr th:each="m:${messages}" th:attr="class=${m.isRead == 1 ? 'isRead' : 'notRead'}">
-		    		<form class="user-delete-message-form" th:action="@{/messages/delete}" th:object="${UserRemoveMessageForm}" method="post" autocomplete="off">
-				    	<td style="width: 33%;" th:text="${m.fromUser.lastName} + ', ' + ${m.fromUser.firstName}"></td>
-				    	<td style="width: 33%;" th:text="${m.header}"></td>
-				    	<td style="width: 33%;" th:text="${#dates.format(m.date, 'dd/MM/yyyy')}"></td>
-				    	<input type="hidden" name="messageId" th:value="${m.id}"/>
-				    	<td><input type="submit" class="btn btn-warning btn-xs" value="x"/></td>
-				    </form>
+			    	<td style="width: 33%;" th:text="${m.fromUser.lastName} + ', ' + ${m.fromUser.firstName}"></td>
+			    	<td style="width: 33%;" th:text="${m.header}"></td>
+			    	<td style="width: 33%;" th:text="${#dates.format(m.date, 'dd/MM/yyyy')}"></td>
+			    	<form class="user-delete-message-form" th:action="@{/messages/delete}" th:object="${UserRemoveMessageForm}" method="post" autocomplete="off">
+			    		<input type="hidden" name="messageId" th:value="${m.id}"/>
+			    		<td class="message-delete-submit"><input type="submit" class="btn btn-warning btn-xs" value="x"/></td>
+			    	</form>
+			    	<td style="display: none;"><a th:href="@{/messages/view/{mId}(mId=${m.id})}"></a></td>
 			    </tr>
 		    </tbody>
 		</table>
 	</div>
 	<span th:include="layout/footer :: scripts" class="hidden"></span>
+	<span th:include="forms/create-message :: create-message-form-js"></span>
 	<script th:inline="javascript">
 		$(document).ready(function() {
 			var $userDeleteMessageForm = $('.user-delete-message-form');
-			
-			var $messageToUser = $('#message-to-user');
-			var $messageTextArea = $('#message-text');
-			var $messageCreateSubmit = $('#message-create-submit');
-			var $messageCreateFormValidationError = $('.message-create-form-validation-error');
 			
 			var url = document.createElement('a');
 			url.href = document.URL;
@@ -127,58 +115,61 @@
 				});
 			}
 			
-			validateCreateMessageForm();
-			$messageCreateFormValidationError.hide();
+			var enableTrClick = true;
 			
+			$('.message-delete-submit').on('mouseenter', function (event) {
+				enableTrClick = false;
+			});
+			
+			$('.message-delete-submit').on('mouseleave', function (event) {
+				enableTrClick = true;
+			});
+
 			$userDeleteMessageForm.submit(function(event) {
 				event.preventDefault();
+				event.stopPropagation();
 				var $this = $(this);
-				var to_user = $("#message-to-user").val().trim();
 				submitForm($this, 10000, function(response) {
 					if (response.type === "success") {
+						if ($this.parent('tr').attr('class') === 'notRead') {
+							$unreadMessagesCount = $(".unread-messages-count");
+							var result = (+$unreadMessagesCount.text().replace(/["'()]/g,"") - 1);
+							if (result === 0) {
+								$unreadMessagesCount.hide();
+							} else {
+								$unreadMessagesCount.text('('+ result +')');
+							}
+						}
 						$this.parent('tr').remove();
+					}
+					if (response.type === "error") {
+						$messageDeleteError = $(".message-delete-error");
+						$messageDeleteError.text('Ошибка удаления, перезагрузите страницу.');
+						$messageDeleteError.show();
 					}
 				});
 				return false;
 			});
 			
-			$messageTextArea.on('input change', function(event) {
-				validateCreateMessageForm();
+			$("tr").click(function() {
+				if (enableTrClick) {
+			  		window.location = $(this).find("a").attr("href");
+			  	}
 			});
 			
 			$(".dropdown-menu li").click(function() {
-				$("#message-to-user").val($(this).children("#user-id").val());
-			});
-			$(".dropdown-menu li a").click(function(){
-		    	$("#message-to-user-name").val($(this).text());
+				$("#new-message-to-user").val($(this).children("#user-id").val());
+				validateCreateMessageForm($messageToUser, $messageTextArea, $messageCreateSubmit, $messageCreateFormValidationError);
 			});
 			
-			$("#message-clear-btn").click(function() {
-				$("#message-header").val('');
-				$("#message-text").val('');
+			$(".dropdown-menu li a").click(function(){
+		    	$("#message-to-user-name").val($(this).text());
+		    	validateCreateMessageForm($messageToUser, $messageTextArea, $messageCreateSubmit, $messageCreateFormValidationError);
 			});
 			
 			$('#new-message-button').on('click', function() {
 				$('.new-message').slideToggle();
 			});
-			
-			function validateCreateMessageForm() {
-				var disabled = false;
-				var errorText = "";
-				
-				if ($messageToUser.val() == -1) {
-					disabled = true;
-					errorText = "Выберите собеседника. "
-				}
-				if ($messageTextArea.val().trim().length === 0) {
-					disabled = true;
-					errorText = "Текст сообщения не может быть пустым."
-				}
-				
-				$messageCreateSubmit.attr('disabled', disabled);
-				$messageCreateFormValidationError.text(errorText);
-				$messageCreateFormValidationError.show();
-			};
 		});
 	</script>
 </body>
