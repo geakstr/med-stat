@@ -83,7 +83,7 @@ public class CabinetController {
     public String userIndex(Model model, Principal principal) {
         User user = userRepo.findByEmail(principal.getName());
         model.addAttribute("userStats", statService.getAllActualUserStats(user.id));
-
+        model.addAttribute("userId", user.id);
         return "cabinet/user/index";
     }
 

@@ -1,17 +1,25 @@
 package ru.aspu.medstat.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.aspu.medstat.entities.User;
-import ru.aspu.medstat.utils.EmailUtils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ru.aspu.medstat.entities.Statistic;
+import ru.aspu.medstat.entities.User;
+import ru.aspu.medstat.utils.EmailUtils;
 
 @Service
 public class UsersService {
     @Autowired
     private MailService mail;
+    
+    @Autowired
+    private StatisticsService statService;
 
     private SimpleDateFormat birthDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -47,5 +55,34 @@ public class UsersService {
         mail.send(user.email, "Медицинский портал АГУ. Регистрация", String.format(
                 "<a href=\"http://localhost:8080/auth/confirm/%s\">Нажмите сюда для окончания регистрации</a>",
                 user.emailToken));
+    }
+    
+    public JSONObject userToJson(User user) {
+    	JSONObject json = new JSONObject();
+    	
+    	json.put("id", user.id);
+    	json.put("email", user.email);
+    	json.put("first_name", user.firstName);
+    	json.put("last_name", user.lastName);
+    	json.put("birth_date", user.birthDate);
+    	json.put("role", user.role);
+    	json.put("phone", user.phone);
+    	json.put("doctorId", user.doctorId);
+    	
+    	JSONArray stats = new JSONArray();
+    	
+    	for (Statistic stat : statService.getAllActualUserStats(user.id)) {
+    		JSONObject jsonStat = new JSONObject();
+    		jsonStat.put("stat_id", stat.id);
+    		jsonStat.put("gym_id", stat.getUserGym().getGymnastic().id);
+    		jsonStat.put("stat_date", stat.date);
+    		jsonStat.put("percent", stat.percent);
+    		jsonStat.put("gym_title", stat.getUserGym().getGymnastic().title);
+    		stats.add(jsonStat);
+    	}
+    	
+    	json.put("stats", stats);
+    	
+    	return json;
     }
 }

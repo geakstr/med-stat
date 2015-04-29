@@ -35,6 +35,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity3:2.1.2.RELEASE")
+    compile('com.googlecode.json-simple:json-simple:1.1')
 
    // compile("org.hibernate:hibernate-validator")
     //compile("com.h2database:h2")
