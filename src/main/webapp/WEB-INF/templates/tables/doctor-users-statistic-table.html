@@ -4,18 +4,28 @@
 <div th:fragment="table">
 
 <style>
-.demo-container {
+.graphics {
   box-sizing: border-box;
-  width: 850px;
-  height: 450px;
+  width: 100%;
+  height: 300px;
+  margin-top: 22px;
 }
 
-.demo-placeholder {
-  width: 100%;
+.graph {
+  width: 48%;
   height: 100%;
   font-size: 14px;
   line-height: 1.2em;
 }
+
+#graph-one {
+  float: left;
+}
+#graph-two { 
+  float: right;
+}
+
+
 </style>
 
 <input type="hidden" id="userIdHidden" th:value="${userId}" />
@@ -24,11 +34,11 @@
     <thead>
 	    <tr>
 	        <th>Имя</th>
-	        <th>
-            <select id="gyms-select">
+	        <th>Упражнения
+            <!--<select id="gyms-select">
               <option value="-1">Упражнения</option>
               <option th:each="gym : ${userGyms}" th:text="${gym.title}" th:value="${gym.id}" th:selected="${gym.id} == ${gymId}"></option>
-            </select>
+            </select>-->
           </th>
 	        <th>Прогресс</th>
 	        <th>Дата</th>
@@ -45,8 +55,9 @@
 </table>
 
 <div style="clear: both;"></div>
-<div class="demo-container">
-  <div id="placeholder" class="demo-placeholder"></div>
+<div class="graphics">
+  <div id="graph-one" class="graph"></div>
+  <div id="graph-two" class="graph"></div>
 </div>
 
 </div>
@@ -76,30 +87,34 @@ $(document).ready(function() {
     },
     url: "/api/statistics/user/" + userId,
     success: function(data){
-      console.log(data);
-      var all_data = [
-        { label: "Gym 1", data: [["2010/10/01", 0], ["2010/10/5", 1],
-                 ["2010/10/10", 7], ["2010/10/15", 8]]},
-        { label: "Gym 2", data: [["2010/10/01", 13], ["2010/10/5", 23],
-                 ["2010/10/10", 32], ["2010/10/15", 33]]}
-      ];
+      var graph_one_data = [];
+      var graph_two_data = [];
+      for (var i = 0; i < data.stats.stats.length; i++) {
+        var gyms = data.stats.stats[i];
 
-      for (var i = 0; i < data.length; i++) {
-        for (var j = 0; j < data.[i].stats.stats.length; j++) {
-          all_data.push({
-            label : data[i].stats.stats[j].gym_title,
+        var gym_data = [];
+        for (var gym_key in gyms) {
+          if (gyms.hasOwnProperty(gym_key)) {
+            var gym = gyms[gym_key];
+            graph_two_data.push([gym[0]['gym_title'], gym[0]['percent']]);
+            for (var j = 0; j < gym.length; j++) {
+              gym_data.push([gym[j]['stat_date'], gym[j]['percent']]);
+            }
+          }
+        }
 
-          });
+        graph_one_data.push({
+          label: gym['gym_title'],
+          data: gym_data
+        });
+      }
+
+      for (var j = 0; j < graph_one_data.length; ++j) {
+        for (var i = 0; i < graph_one_data[j].data.length; ++i) {
+          graph_one_data[j].data[i][0] = Date.parse(graph_one_data[j].data[i][0]);
         }
       }
 
-      // преобразуем даты в UTC
-      for (var j = 0; j < all_data.length; ++j) {
-        for (var i = 0; i < all_data[j].data.length; ++i) {
-          all_data[j].data[i][0] = Date.parse(all_data[j].data[i][0]);
-       }
-      }
-      // свойства графика
       var plot_conf = {
        series: {
          lines: { 
@@ -110,10 +125,30 @@ $(document).ready(function() {
        xaxis: {
          mode: "time",
          timeformat: "%y/%m/%d",
-       }
+       },
+       yaxis: {
+         max: 100
+        } 
       };
 
-      $.plot("#placeholder", all_data, plot_conf);
+
+      $.plot("#graph-one", graph_one_data, plot_conf);
+      $.plot("#graph-two", [graph_two_data], {
+        series: {
+          bars: {
+            show: true,
+            barWidth: 0.6,
+            align: "center"
+          }
+        },
+        xaxis: {
+          mode: "categories",
+          tickLength: 0
+        },
+        yaxis: {
+          max: 100
+        }
+      });
     }
   });
 });

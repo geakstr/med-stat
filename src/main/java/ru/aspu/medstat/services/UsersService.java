@@ -2,7 +2,9 @@ package ru.aspu.medstat.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,6 +24,7 @@ public class UsersService {
     private StatisticsService statService;
 
     private SimpleDateFormat birthDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat gymDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
     public String getErrors(User user) {
         String errors = "";
@@ -71,14 +74,28 @@ public class UsersService {
     	
     	JSONArray stats = new JSONArray();
     	
+    	Map<Long, JSONArray> statMap = new HashMap<>();
     	for (Statistic stat : statService.getAllActualUserStats(user.id)) {
     		JSONObject jsonStat = new JSONObject();
     		jsonStat.put("stat_id", stat.id);
     		jsonStat.put("gym_id", stat.getUserGym().getGymnastic().id);
-    		jsonStat.put("stat_date", stat.date);
+    		jsonStat.put("stat_date", gymDateFormat.format(stat.date));
     		jsonStat.put("percent", stat.percent);
     		jsonStat.put("gym_title", stat.getUserGym().getGymnastic().title);
-    		stats.add(jsonStat);
+    		
+    		if (statMap.containsKey(stat.getUserGym().getGymnastic().id)) {
+    			statMap.get(stat.getUserGym().getGymnastic().id).add(jsonStat);
+    		} else {
+    			JSONArray jsonStatList = new JSONArray();
+    			jsonStatList.add(jsonStat);
+    			statMap.put(stat.getUserGym().getGymnastic().id, jsonStatList);
+    		}
+    	}
+    	
+    	for (Map.Entry<Long, JSONArray> e : statMap.entrySet()) {
+    		JSONObject jsonObj = new JSONObject();
+    		jsonObj.put(e.getKey(), e.getValue());
+    		stats.add(jsonObj);
     	}
     	
     	json.put("stats", stats);
