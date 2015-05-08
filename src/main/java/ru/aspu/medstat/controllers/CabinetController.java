@@ -82,8 +82,10 @@ public class CabinetController {
     @RequestMapping("/user")
     public String userIndex(Model model, Principal principal) {
         User user = userRepo.findByEmail(principal.getName());
+        model.addAttribute("userGyms", gymService.getAllUserGymnastics(user.id));
         model.addAttribute("userStats", statService.getAllActualUserStats(user.id));
         model.addAttribute("userId", user.id);
+        model.addAttribute("role", userRepo.findByEmail(principal.getName()).role);
         return "cabinet/user/index";
     }
 
@@ -153,14 +155,18 @@ public class CabinetController {
         model.addAttribute("userStats", userStats);
         model.addAttribute("userGyms", gymService.getAllUserGymnastics(user.id));
         model.addAttribute("gymId", gymId);
+        model.addAttribute("userId", user.id);
         return "cabinet/user/index";
     }
 
     @RequestMapping(value = "/doctor/users/{userId}")
     public String getStatsByUser(final @PathVariable Long userId,
-                                 Model model) {
+                                 Model model, Principal principal) {
         User user = userRepo.findOne(userId);
+        model.addAttribute("userGyms", gymService.getAllUserGymnastics(user.id));
         model.addAttribute("userStats", statService.getAllActualUserStats(user.id));
+        model.addAttribute("userId", userId);
+        model.addAttribute("role", userRepo.findByEmail(principal.getName()).role);
         return "cabinet/user/index";
     }
 
@@ -174,8 +180,10 @@ public class CabinetController {
     @RequestMapping(value = "/doctor/users/{userId}/gym/{gymId}")
     public String getStatsByUserAndGym(final @PathVariable Long userId,
                                        final @PathVariable Long gymId,
-                                       Model model) {
+                                       Model model, Principal principal) {
+    	model.addAttribute("userGyms", gymService.getAllUserGymnastics(userId));
         model.addAttribute("userStats", statService.getAllActualUserStatsByGymnastic(userId, gymId));
+        model.addAttribute("role", userRepo.findByEmail(principal.getName()).role);
         return "cabinet/user/index";
     }
 

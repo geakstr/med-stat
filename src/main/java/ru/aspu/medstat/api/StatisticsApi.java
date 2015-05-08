@@ -1,8 +1,11 @@
 package ru.aspu.medstat.api;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import ru.aspu.medstat.entities.Statistic;
-import ru.aspu.medstat.entities.User;
 import ru.aspu.medstat.repositories.UserRepository;
 import ru.aspu.medstat.responses.UserStatsResponse;
 import ru.aspu.medstat.services.StatisticsService;
@@ -36,8 +38,22 @@ public class StatisticsApi {
     }
 
     @RequestMapping(value = "/user/{userId}/{gymnasticId}", method = RequestMethod.GET)
-    public List<Statistic> getUserById(final @PathVariable Long userId,
+    public UserStatsResponse getUserById(final @PathVariable Long userId,
                                        final @PathVariable Long gymnasticId) {
-        return statService.getAllActualUserStatsByGymnastic(userId, gymnasticId);
+    	
+    	JSONObject user = usersService.userToJson(usersRepo.findOne(userId));
+    	JSONArray stats = (JSONArray) user.get("stats");
+    	
+		Iterator<JSONObject> iterator = stats.iterator();
+    	while (iterator.hasNext()) {
+    		JSONObject stat = iterator.next();
+    		if (!stat.containsKey(gymnasticId)) {
+    			iterator.remove();
+    		}
+    	}
+  
+    	
+    	
+    	return new UserStatsResponse(user);
     }
 }
