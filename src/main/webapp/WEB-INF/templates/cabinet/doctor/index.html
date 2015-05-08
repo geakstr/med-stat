@@ -78,11 +78,14 @@
 	</div>
 	<span th:include="layout/footer :: scripts" class="hidden"></span>
 	<script th:inline="javascript">
+	/*<![CDATA[*/
 		$(document).ready(function() {
 			var $userGymDeleteForm = $('.user-gym-delete-form');
 			var $userGymAddForm = $('.user-gym-add-form');
 			
-			$userGymDeleteForm.submit(function (event) {
+			$userGymDeleteForm.submit(submitDeleteForm);
+			
+			function submitDeleteForm(event) {
         		event.preventDefault();
         		var $this = $(this);
         		$this.parents('.user-row-gyms').show();
@@ -92,7 +95,7 @@
 		            }
 		        });
         		return false;
-        	});
+        	}
         	
         	$userGymAddForm.submit(function(event) {
         		event.preventDefault();
@@ -100,7 +103,36 @@
         		submitForm($this, 10000, function (response) {
         			if (response.type === "success") {
 						var selectText = $this.find('.selectNewGym option:selected').text();
-        				$('<li><b>' + selectText + '</b></li>').insertBefore($this.parent('li'));
+        				
+        				var li = document.createElement('li');
+        				
+        				var form = document.createElement('form');
+        				form.className = 'user-gym-delete-form';
+        				form.action = '/lk/doctor/gyms/remove';
+        				form.method = 'post';
+        				form.autocomplete = 'off';
+        				form.onsubmit = submitDeleteForm;
+        				
+        				var gymLabel = document.createElement('label');
+        				gymLabel.innerHTML = selectText + "&nbsp;";
+        				
+        				var hiddentInput = document.createElement('input');
+        				hiddentInput.type = 'hidden';
+        				hiddentInput.name = 'userGymId';
+        				hiddentInput.value = response.lastId;
+        				
+        				var submitInput = document.createElement('input');
+        				submitInput.type = 'submit';
+        				submitInput.className = 'btn btn-warning btn-xs';
+        				submitInput.value = '×';
+        				
+        				form.appendChild(gymLabel);
+        				form.appendChild(hiddentInput);
+        				form.appendChild(submitInput);
+        				
+        				li.appendChild(form);
+        				
+        				$this.parent('li').before(li);
         			}
         		});
         		return false;
@@ -110,6 +142,7 @@
 				$(this).parent('tr').find('.user-row-gyms').toggle();
 			});
 		});
+	/*]]>*/
 	</script>
 </body>
 </html>

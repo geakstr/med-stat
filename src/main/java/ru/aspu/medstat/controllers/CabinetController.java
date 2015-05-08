@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import ru.aspu.medstat.entities.Statistic;
 import ru.aspu.medstat.entities.User;
 import ru.aspu.medstat.entities.UserGym;
@@ -19,6 +20,7 @@ import ru.aspu.medstat.repositories.UsersGymsRepository;
 import ru.aspu.medstat.responses.ErrorResponse;
 import ru.aspu.medstat.responses.IResponse;
 import ru.aspu.medstat.responses.SuccessResponse;
+import ru.aspu.medstat.responses.UserGymCreateResponse;
 import ru.aspu.medstat.responses.UserResponse;
 import ru.aspu.medstat.services.GymnasticService;
 import ru.aspu.medstat.services.MailService;
@@ -205,6 +207,6 @@ public class CabinetController {
         ug.setUser(userRepo.findOne(form.getUserId()));
         ug.setGymnastic(gymRepo.findOne(form.getGymId()));
         userGymRepo.save(ug);
-        return new SuccessResponse();
+        return new UserGymCreateResponse(ug.id);
     }
 }

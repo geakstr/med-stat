@@ -44,6 +44,7 @@ public class StatisticsApi {
     	JSONObject user = usersService.userToJson(usersRepo.findOne(userId));
     	JSONArray stats = (JSONArray) user.get("stats");
     	
+		@SuppressWarnings("unchecked")
 		Iterator<JSONObject> iterator = stats.iterator();
     	while (iterator.hasNext()) {
     		JSONObject stat = iterator.next();
@@ -51,9 +52,6 @@ public class StatisticsApi {
     			iterator.remove();
     		}
     	}
-  
-    	
-    	
     	return new UserStatsResponse(user);
     }
 }
