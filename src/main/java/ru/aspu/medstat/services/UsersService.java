@@ -2,7 +2,6 @@ package ru.aspu.medstat.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +59,8 @@ public class UsersService {
                 user.emailToken));
     }
     
-    public JSONObject userToJson(User user) {
+    @SuppressWarnings("unchecked")
+	public JSONObject userToJson(User user) {
     	JSONObject json = new JSONObject();
     	
     	json.put("id", user.id);

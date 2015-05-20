@@ -1,7 +1,6 @@
 package ru.aspu.medstat.api;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.aspu.medstat.entities.Statistic;
 import ru.aspu.medstat.repositories.UserRepository;
 import ru.aspu.medstat.responses.UserStatsResponse;
 import ru.aspu.medstat.services.StatisticsService;
