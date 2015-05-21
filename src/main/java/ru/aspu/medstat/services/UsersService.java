@@ -21,6 +21,10 @@ public class UsersService {
     
     @Autowired
     private StatisticsService statService;
+    
+    public UsersService(SimpleDateFormat birthDateFormat) {
+    	this.birthDateFormat = birthDateFormat;
+    }
 
     private SimpleDateFormat birthDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat gymDateFormat = new SimpleDateFormat("yyyy/MM/dd");
